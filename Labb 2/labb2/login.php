@@ -4,6 +4,7 @@ require_once("loginView.php");
 require_once("loginModel.php");
 
 
+
 class login{
 
 private $m_loginView;
@@ -19,16 +20,18 @@ $this->m_loginModel = new loginModel();
 
 			//handle input 
 
+		
+		
+		
 		if($this->m_loginModel->isLoggedIn()){
 			if($this->m_loginView->didUserLogout()){
 				$this->m_loginModel->Logout();
+				$this->m_loginView->DisplayUserPressedLogout();
+			}else
+			{
+				
+				$this->m_loginView->DisplayAlreadyLoggedin();
 			}
-		}else
-		{
-			if($this->m_loginView->didUserLogin()){
-				$this->m_loginModel->Login();
-			}
-
 		}
 		
 
@@ -41,32 +44,63 @@ $this->m_loginModel = new loginModel();
 
 		if($this->m_loginView->didUserLogin())
 		{
-			var_dump(empty($this->m_loginView->getUsername()));
-			var_dump(empty($this->m_loginView->getPassword()));	
-			var_dump($this->m_loginView->getUsername());
-			var_dump($this->m_loginView->getPassword());
+			//kanske måste vara såhär på webbhotelet;
+			//$username = $this->m_loginView->getUsername();
 			
 
 			if(empty($this->m_loginView->getUsername()) && empty($this->m_loginView->getPassword()))
 			{
-				return $this->m_loginView->DisplayEmpty();
+				$this->m_loginView->DisplayEmpty();
 				 
 			}
-			elseif(empty($this->m_loginView->getUsername() && $this->m_loginView->getPassword()))
+			elseif(empty($this->m_loginView->getUsername()) && $this->m_loginView->getPassword())
 			{
-				return $this->m_loginView->DisplayEmptyUsername();
+				$this->m_loginView->DisplayEmptyUsername();
 			}
-			elseif(
-				$this->m_loginModel->comparePassword(
+			elseif(empty($this->m_loginView->getPassword()) && $this->m_loginView->getUsername())
+			{
+				$this->m_loginView->DisplayEmptyPassword();
+			}
+			
+			elseif($this->m_loginModel->comparePasswordSucced($this->m_loginView->getUsername(), $this->m_loginView->getPassword()))
+			{	
+
+				$this->m_loginModel->Login();
+				if($this->m_loginView->getCheckboxStatus())
+				{
+				$this->m_loginView->makeUserCookies($this->m_loginView->getUsername());
+				$this->m_loginView->makePasswordCookies($this->m_loginView->getPassword());
+				$this->m_loginView->DisplaySuccessLoginCookie();
+				}
+				else{
+					$this->m_loginView->DisplaySuccessfulLogin();
+				}
+
+			}
+			elseif($this->m_loginModel->comparePasswordWrongPass(
 					$this->m_loginView->getUsername(), $this->m_loginView->getPassword()
 				)
 			)
 			{	
-				return $this->m_loginView->DisplaySuccessfulLogin();
+				$this->m_loginView->DisplayCorrUserWrongPass();
 			}
+			elseif(
+				$this->m_loginModel->comparePasswordWrongUsername(
+					$this->m_loginView->getUsername(), $this->m_loginView->getPassword()
+				)
+			)
+			{	
+				$this->m_loginView->DisplayWrongUserCorrPass();
+			}
+			
+		}
+
+
+		if(!$this->m_loginModel->isLoggedIn() && !$this->m_loginView->didUserLogout() && !$this->m_loginView->didUserLogin())
+		{
+			$this->m_loginView->showLoginLogout();
 		}
 		
-		return $this->m_loginView->showLoginLogout();
 		
 
 			

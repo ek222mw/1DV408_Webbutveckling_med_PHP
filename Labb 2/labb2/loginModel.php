@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 class loginModel{
 
 
@@ -23,7 +25,7 @@ class loginModel{
 
 	}
 
-	public function comparePassword($username, $password){
+	public function comparePasswordSucced($username, $password){
 
 		$db_handle = $this->connectdb();
 		$sql = "SELECT * FROM login";
@@ -49,8 +51,63 @@ class loginModel{
 
 	}	
 
+	public function comparePasswordWrongPass($username, $password){
+
+		$db_handle = $this->connectdb();
+		$sql = "SELECT * FROM login";
+		$result = mysql_query($sql);
+		     
+		while ($db_field = mysql_fetch_assoc($result)) {
+		            
+		$db_username = $db_field['username'];
+		$db_password = $db_field['password'];
+		}
+		     
+		 mysql_close($db_handle);
+
+		 if($username !== $db_username && $password != $db_password)
+		 {
+		 	echo "right";
+		 	return true;
+		 }
+
+		 return false;
+
+
+
+
+	}	
+
+	public function comparePasswordWrongUsername($username, $password){
+
+		$db_handle = $this->connectdb();
+		$sql = "SELECT * FROM login";
+		$result = mysql_query($sql);
+		     
+		while ($db_field = mysql_fetch_assoc($result)) {
+		            
+		$db_username = $db_field['username'];
+		$db_password = $db_field['password'];
+		}
+		     
+		 mysql_close($db_handle);
+
+		 if($username != $db_username && $password == $db_password)
+		 {
+		 	return true;
+		 }
+
+		 return false;
+
+
+
+
+	}	
+
+
 	public function isLoggedIn()
 	{
+
 		if(isset($_SESSION["SessionUsername"])){
 
 		$saveUserSession = $_SESSION["SessionUsername"];
@@ -62,15 +119,18 @@ class loginModel{
 	public function Logout(){
 
 		
-		unset($saveUserSession);
+		session_unset($_SESSION["SessionUsername"]);
 
 
 	}
 
 	public function Login(){
 
-		$saveUserSession = true;
+		$_SESSION["SessionUsername"] = true;
+
 	}
+
+
 
 	
 
