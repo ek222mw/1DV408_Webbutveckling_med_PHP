@@ -39,6 +39,9 @@ class loginModel{
 		     
 		 mysql_close($db_handle);
 
+		 
+
+
 		 if($username == $db_username && $password == $db_password)
 		 {
 		 	return true;
@@ -49,7 +52,20 @@ class loginModel{
 
 
 
-	}	
+	}
+
+	public function encryptPassword($pw){
+
+		return base64_encode($pw);
+	}
+
+	public function decodePassword($pwcrypt){
+
+		return base64_decode($pwcrypt);
+	}
+
+
+
 
 	public function comparePasswordWrongPass($username, $password){
 
@@ -65,9 +81,8 @@ class loginModel{
 		     
 		 mysql_close($db_handle);
 
-		 if($username !== $db_username && $password != $db_password)
+		 if($username == $db_username && $password !== $db_password)
 		 {
-		 	echo "right";
 		 	return true;
 		 }
 
@@ -92,7 +107,33 @@ class loginModel{
 		     
 		 mysql_close($db_handle);
 
-		 if($username != $db_username && $password == $db_password)
+		 if($username !== $db_username && $password == $db_password)
+		 {
+		 	return true;
+		 }
+
+		 return false;
+
+
+
+
+	}	
+
+	public function comparePasswordAllWrong($username, $password){
+
+		$db_handle = $this->connectdb();
+		$sql = "SELECT * FROM login";
+		$result = mysql_query($sql);
+		     
+		while ($db_field = mysql_fetch_assoc($result)) {
+		            
+		$db_username = $db_field['username'];
+		$db_password = $db_field['password'];
+		}
+		     
+		 mysql_close($db_handle);
+
+		 if($username !== $db_username && $password !== $db_password)
 		 {
 		 	return true;
 		 }
@@ -129,6 +170,27 @@ class loginModel{
 		$_SESSION["SessionUsername"] = true;
 
 	}
+
+	public function setAgent($agent){
+
+		if(isset($_SESSION["SessionAgent"]) == false)
+		{
+			$_SESSION["SessionAgent"] = $agent;
+			return true;
+		}
+		return false;
+	}
+
+	public function compareAgent($agent){
+			var_dump($agent, $_SESSION['SessionAgent']);
+		if($_SESSION['SessionAgent'] === $agent){
+			return true;
+
+		} 
+		return false;
+	}
+
+
 
 
 
