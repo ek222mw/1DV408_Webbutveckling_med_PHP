@@ -5,10 +5,10 @@ session_start();
 class loginModel{
 
 
-	private  $dbusername = "root";
-	private  $server = "127.0.0.1";
+	private  $dbusername = "";
+	private  $server = "";
 	private  $dbpassword = "";
-	private  $database = "login";
+	private  $database = "";
 
 	private function connectdb(){
 
@@ -28,19 +28,20 @@ class loginModel{
 	public function comparePasswordSucced($username, $password){
 
 		$db_handle = $this->connectdb();
-		$sql = "SELECT * FROM login";
+		$sql = "SELECT * FROM users";
 		$result = mysql_query($sql);
-		     
+		
+		
 		while ($db_field = mysql_fetch_assoc($result)) {
 		            
 		$db_username = $db_field['username'];
 		$db_password = $db_field['password'];
 		}
-		     
+		    
 		 mysql_close($db_handle);
 
 		 
-
+        
 
 		 if($username == $db_username && $password == $db_password)
 		 {
@@ -70,7 +71,7 @@ class loginModel{
 	public function comparePasswordWrongPass($username, $password){
 
 		$db_handle = $this->connectdb();
-		$sql = "SELECT * FROM login";
+		$sql = "SELECT * FROM users";
 		$result = mysql_query($sql);
 		     
 		while ($db_field = mysql_fetch_assoc($result)) {
@@ -96,7 +97,7 @@ class loginModel{
 	public function comparePasswordWrongUsername($username, $password){
 
 		$db_handle = $this->connectdb();
-		$sql = "SELECT * FROM login";
+		$sql = "SELECT * FROM users";
 		$result = mysql_query($sql);
 		     
 		while ($db_field = mysql_fetch_assoc($result)) {
@@ -122,7 +123,7 @@ class loginModel{
 	public function comparePasswordAllWrong($username, $password){
 
 		$db_handle = $this->connectdb();
-		$sql = "SELECT * FROM login";
+		$sql = "SELECT * FROM users";
 		$result = mysql_query($sql);
 		     
 		while ($db_field = mysql_fetch_assoc($result)) {
@@ -161,6 +162,8 @@ class loginModel{
 
 		
 		session_unset($_SESSION["SessionUsername"]);
+		setcookie("Username",NULL);
+		setcookie("Password", NULL);
 
 
 	}
@@ -182,7 +185,7 @@ class loginModel{
 	}
 
 	public function compareAgent($agent){
-			var_dump($agent, $_SESSION['SessionAgent']);
+			
 		if($_SESSION['SessionAgent'] === $agent){
 			return true;
 

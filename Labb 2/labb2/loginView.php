@@ -347,7 +347,9 @@ class loginView{
 
 		if(isset($_POST['Login']))
 		{
+		    
 			return true;
+			
 		}
 		return false;
 
@@ -365,16 +367,17 @@ class loginView{
 	public function makeUserCookies($stringUser){
 
 		$timeUser = time() + 60;
-
+        
 		file_put_contents("cookietimer.txt", $timeUser);
 
 		setcookie(self::$cookieUsername, $stringUser, $timeUser);
+	    	
 	}
 
 	public function makePasswordCookies($stringPass){
 
 		$timePass = time() + 60;
-
+        
 		file_put_contents("cookietimer.txt", $timePass);
 
 		setcookie(self::$cookiePassword, $stringPass, $timePass);	
@@ -414,7 +417,7 @@ class loginView{
 	public function checkCookieTime(){
 
 
-		$originalTime = file_get_contents('cookietimer');
+		$originalTime = file_get_contents('cookietimer.txt');
 
 		if($originalTime < time()){
 			return false;
@@ -444,7 +447,8 @@ class loginView{
 
 		return $this->userAgent2;
 	}
-
+	
+	
 
 
 

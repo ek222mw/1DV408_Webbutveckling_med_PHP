@@ -21,14 +21,9 @@ $this->m_loginModel = new loginModel();
 			//handle input 
 
 		
-		var_dump($this->m_loginModel->isLoggedIn());
-		var_dump($this->m_loginView->loadUserCookies());
-		var_dump($this->m_loginView->loadPassCookies());
-		var_dump($this->m_loginView->loadUserCookies() == NULL);
-		var_dump($this->m_loginView->loadPassCookies() == NULL);
+		
 		$this->m_loginView->setAgent2();
 		if($this->m_loginModel->isLoggedIn() && $this->m_loginModel->compareAgent($this->m_loginView->getAgent2())){
-			var_dump("hej");
 			if($this->m_loginView->didUserLogout()){
 				$this->m_loginModel->Logout();
 				$this->m_loginView->DisplayUserPressedLogout();
@@ -54,7 +49,7 @@ $this->m_loginModel = new loginModel();
 					$this->m_loginView->DisplayWrongCookieDetNoSess();
 				}
 			}else{
-				echo "manipulerad";
+				
 				$this->m_loginView->DisplayTryManipulateCookieNoSess();	
 			}
 
@@ -76,18 +71,19 @@ $this->m_loginModel = new loginModel();
 		{
 			//kanske måste vara såhär på webbhotelet;
 			//$username = $this->m_loginView->getUsername();
-			
+			$inputUsername = $this->m_loginView->getUsername();
+			$inputPassword = $this->m_loginView->getPassword();
 
-			if(empty($this->m_loginView->getUsername()) && empty($this->m_loginView->getPassword()))
+			if(empty($inputUsername) && empty($inputPassword))
 			{
 				$this->m_loginView->DisplayEmpty();
 				 
 			}
-			elseif(empty($this->m_loginView->getUsername()) && $this->m_loginView->getPassword())
+			elseif(empty($inputUsername) && $this->m_loginView->getPassword())
 			{
 				$this->m_loginView->DisplayEmptyUsername();
 			}
-			elseif(empty($this->m_loginView->getPassword()) && $this->m_loginView->getUsername())
+			elseif(empty($inputPassword) && $this->m_loginView->getUsername())
 			{
 				$this->m_loginView->DisplayEmptyPassword();
 			}
@@ -98,6 +94,7 @@ $this->m_loginModel = new loginModel();
 				$this->m_loginModel->Login();
 				$this->m_loginView->setAgent();
 				$this->m_loginModel->setAgent($this->m_loginView->getAgent());
+				
 
 				if($this->m_loginView->getCheckboxStatus())
 				{
@@ -138,7 +135,7 @@ $this->m_loginModel = new loginModel();
 			}
 			
 		}
-
+        
 
 		if(!$this->m_loginModel->isLoggedIn() && !$this->m_loginView->didUserLogout() && !$this->m_loginView->didUserLogin() 
 			&& $this->m_loginView->loadUserCookies() == NULL && $this->m_loginView->loadPassCookies() == NULL
@@ -147,20 +144,8 @@ $this->m_loginModel = new loginModel();
 			$this->m_loginView->showLoginLogout();
 		}
 		
-		
+	
 
-			
-		
-		//Successful login.
-		
-		
-		/*else{
-			/*echo "<h2>Ej Inloggad</h2><br><br>
-			<p>Användaren finns ej</p>
-			";
-			echo '<META HTTP-EQUIV="Refresh" content="2; URL=http://127.0.0.1/Labb2/index.php">';*/
-			//$this->m_loginView->displayForm();
-		//}
 	}
 
 }
