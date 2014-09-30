@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once("loginView.php");
 require_once("loginModel.php");
@@ -143,6 +143,10 @@ $this->m_loginModel = new loginModel();
 		{
 			$this->m_loginView->showLoginLogout();
 		}
+		elseif($this->m_loginModel->isLoggedIn() && !$this->m_loginModel->compareAgent($this->m_loginView->getAgent2()))
+		{
+			$this->m_loginView->showLoginLogout();
+    		}
 		
 	
 
