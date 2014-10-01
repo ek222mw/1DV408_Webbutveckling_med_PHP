@@ -62,6 +62,7 @@
 		{
 			if(!$this->view->didUserPressRegister() && !$this->view->didUserPressLogin() && !$this->model->checkLoginStatus())
 			{
+				
 				$this->view->showLoginPage();
 			}
 			
@@ -85,7 +86,8 @@
 				try
 				{
 					// Verifiera data i fälten.
-					$this->model->verifyUserInput($_POST['username'], md5($_POST['password']));
+
+					$this->model->verifyUserInput($_POST['username'], $_POST['password']);
 					
 					// Kontrollerar om "Håll mig inloggad"-rutan är ikryssad.
 					if($checkboxStatus === true)
@@ -108,8 +110,9 @@
 					$this->view->showMessage($e->getMessage());
 				}
 			}
-			echo "hej";
+			
 			//Generera utdata
+			
 			return $this->view->showLoginPage();
 		}
 		
@@ -154,7 +157,15 @@
 							{
 								if($this->model->ComparePasswordRepPassword($registerPassword,$registerRepeatPassword))
 								{
-									
+
+									//if($this->model->ReadSpecifik($registerUsername))
+									//{
+										//if($this->model->ValidateUsername($registerUsername))
+										//{
+											//$this->model->add($registerUsername,$registerPassword);
+											
+										//}
+									//}
 								}
 								
 							}

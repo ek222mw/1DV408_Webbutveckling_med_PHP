@@ -154,7 +154,7 @@ require_once 'common/HTMLView.php';
 
 			// visa registreringssidan.
 				
-
+					 
 					$this->loginStatus = "Ej inloggad, Registrerar användare";
 					$contentString = 
 					 "
@@ -162,7 +162,7 @@ require_once 'common/HTMLView.php';
 						<fieldset>
 							<legend>Registrera ny användare - Skriv in användarnamn och lösenord</legend>
 							$this->message
-							Namn: <input type='text' name='createusername' value='". $this->getRegisterUsername() ."'><br>
+							Namn: <input type='text' name='createusername' value='". strip_tags($_POST['createusername']) ."'><br>
 							Lösenord: <input type='password' name='createpassword'><br>
 							Repetera Lösenord: <input type='password' name='repeatpassword'><br>
 							Skicka: <input type='submit' name='createuserbutton'  value='Registrera'>

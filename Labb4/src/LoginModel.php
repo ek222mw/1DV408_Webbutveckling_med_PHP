@@ -2,15 +2,15 @@
 
 	class LoginModel
 	{
-		private $correctUsername = "Admin";
-		private $correctPassword = "dc647eb65e6711e155375218212b3964";
+		private $correctUsername = "";
+		private $correctPassword = "";
 		private $sessionUserAgent;
 
 		protected $dbUsername = "root";
 		protected $dbPassword = "";
 		protected $dbConnstring = 'mysql:host=127.0.0.1;dbname=login';
 		protected $dbConnection;
-		protected $dbTable;
+		protected $dbTable = "login";
 		
 		public function __construct($userAgent)
 		{
@@ -81,7 +81,7 @@
 		
 			
 	
-		/*protected function connection() {
+		protected function connection() {
 			if ($this->dbConnection == NULL)
 				$this->dbConnection = new \PDO($this->dbConnstring, $this->dbUsername, $this->dbPassword);
 			
@@ -90,27 +90,117 @@
 			return $this->dbConnection;
 		}
 
+		
+	
 
-		public function add($user) {
-		try {
+
+		public function add($inputuser,$inputpassword) {
+			try {
+				$db = $this -> connection();
+				
+				$sql = "INSERT INTO $this->dbTable (`username`,`password`) VALUES (?, ?)";
+				$params = array($inputuser, $inputpassword);
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+			} catch (\PDOException $e) {
+				die('An unknown error have occured.');
+			}
+		}
+
+		public function ReadSpecifik($inputuser)
+		{
+
+			
 			$db = $this -> connection();
 
-			$sql = "INSERT INTO $this->dbTable (" . self::$key . ", " . self::$name . ", ".self::$owner.") VALUES (?, ?, ?)";
-			$params = array($project -> getUnique(), $project -> getName(), $project->getOwner()->getUnique());
+			$sql = "SELECT `username` FROM `$this->dbTable` WHERE `username` = ?";
+			$params = array($inputuser);
 
 			$query = $db -> prepare($sql);
 			$query -> execute($params);
 
-		} catch (\PDOException $e) {
-			die('An unknown error have occured.');
+			$result = $query -> fetch();
+			
+			
+			if ($result['username'] !== null) {
+				
+				$this->UsernameExistInDB();
+
+			}else{
+				return true;
+			}
+			
+		
 		}
-	}*/
+
+		public function UsernameExistInDB(){
+		
+			
+				throw new Exception("Användarnamnet är redan upptaget");
+		}
+
+		public function ValidateUsername($inputuser){
+			
+
+
+			if(!preg_match('/^[A-Za-z][A-Za-z0-9]{5,31}$/', $inputuser))
+			{
+				throw new Exception("Användarnamnet innehåller ogiltiga tecken");
+			}
+			return true;
+		}
 
 		
 		
 		// Kontrollerar användarinput gentemot de faktiska användaruppgifterna.
 		public function verifyUserInput($inputUsername, $inputPassword, $isCookieLogin = false)
-		{										
+		{
+
+
+
+			$db = $this -> connection();
+
+			$sql = "SELECT `username` FROM `$this->dbTable` WHERE `username` = ?";
+			$params = array($inputUsername);
+
+			$query = $db -> prepare($sql);
+			$query -> execute($params);
+
+			$result = $query -> fetch();
+			
+			
+			if ($result) {
+				
+				
+				$result['username'];
+				$DB_Username = $result['username'];
+
+			}
+
+
+			$db = $this -> connection();
+
+			$sql = "SELECT `password` FROM `$this->dbTable` WHERE `password` = ?";
+			$params = array($inputPassword);
+
+			$query = $db -> prepare($sql);
+			$query -> execute($params);
+
+			$result = $query -> fetch();
+			
+			
+			if ($result) {
+				
+				
+				$result['password'];
+				$DB_Password = $result['password'];
+				
+
+			}
+
+
 			if($inputUsername == "" || $inputUsername === NULL)
 			{
 				// Kasta undantag.
@@ -124,7 +214,7 @@
 			}
 			
 			// Kontrollerar ifall inparametrarna matchar de faktiska användaruppgifterna.
-			if($inputUsername == $this->correctUsername && $inputPassword == $this->correctPassword)
+			if($inputUsername == $DB_Username && $inputPassword == $DB_Password)
 			{
 				// Inloggningsstatus och användarnamn sparas i sessionen.
 				$_SESSION['loggedIn'] = true;
