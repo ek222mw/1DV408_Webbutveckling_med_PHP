@@ -24,6 +24,8 @@
 				{
 					// Logga in med kakor.
 					$this->view->loginWithCookies();
+					
+					
 				}
 				catch(Exception $e)
 				{
@@ -55,6 +57,15 @@
 					$this->doRegister();
 				}
 			}
+			if($this->model->checkLoginStatus() && $this->view->searchForCookies())
+			{
+				$this->view->showLoginPage();
+			}
+			if($this->model->checkLoginStatus() && !$this->view->searchForCookies())
+			{
+				
+				$this->view->showLoginPage();
+			}
 		}
 		
 		// Hämtar sidans innehåll.
@@ -71,9 +82,11 @@
 		// Försöker verifiera och logga in användaren.
 		public function doLogin()
 		{
+			
 			// Kontrollerar ifall användaren tryckt på "Logga in" och inte redan är inloggad.
 			if($this->view->didUserPressLogin() && !$this->model->checkLoginStatus())
 			{
+				
 				// Kontrollerar indata
 				$checkboxStatus = false;
 				
@@ -93,7 +106,7 @@
 					if($checkboxStatus === true)
 					{
 						// Skapa cookies.
-						$this->view->createCookies($_POST['username'], md5($_POST['password']));
+						$this->view->createCookies($_POST['username'], $this->model->encryptPassword($_POST['password']));
 						
 						// Visar cookielogin-meddelande.
 						$this->view->successfulLoginAndCookieCreation();
@@ -102,6 +115,7 @@
 					{
 						// Visar login-meddelande.
 						$this->view->successfulLogin();
+						
 					}
 				}
 				catch(Exception $e)
@@ -111,9 +125,20 @@
 				}
 			}
 			
-			//Generera utdata
+				
 			
-			return $this->view->showLoginPage();
+				if(!$this->view->didUserPressLogout() && !$this->model->checkLoginStatus())
+				{
+					
+					$this->view->showLoginPage();
+				}
+
+
+
+
+				
+			
+			
 		}
 		
 		// Loggar ut användaren.
@@ -140,6 +165,10 @@
 
 		public function doRegister(){
 
+			$registerUsername = $this->view->getRegisterUsername();
+			$registerPassword = $this->view->getRegisterPassword();
+			$registerRepeatPassword = $this->view->getRepeatRegisterPassword();
+
 			if($this->view->didUserPressRegister() && !$this->view->didUserPressLogin() && !$this->model->checkLoginStatus())
 			{
 				try{
@@ -148,9 +177,8 @@
 					if($this->view->didUserPressCreateUser())
 					{
 						
-						$registerUsername = $this->view->getRegisterUsername();
-						$registerPassword = $this->view->getRegisterPassword();
-						$registerRepeatPassword = $this->view->getRepeatRegisterPassword();
+						
+						
 						if($this->model->CheckBothRegInput($registerUsername,$registerPassword))
 						{
 							if($this->model->CheckRegUsernameLength($registerUsername) && $this->model->CheckReqPasswordLength($registerPassword))
@@ -158,14 +186,21 @@
 								if($this->model->ComparePasswordRepPassword($registerPassword,$registerRepeatPassword))
 								{
 
-									//if($this->model->ReadSpecifik($registerUsername))
-									//{
-										//if($this->model->ValidateUsername($registerUsername))
-										//{
-											//$this->model->add($registerUsername,$registerPassword);
+									if($this->model->ReadSpecifik($registerUsername))
+									{
+										if($this->model->ValidateUsername($registerUsername))
+										{
 											
-										//}
-									//}
+											$this->model->add($registerUsername,$registerPassword);
+											if($this->model->UserRegistered())
+											{
+												$this->view->successfulRegistration();
+												$this->view->showLoginPageWithRegname();
+											}
+
+											
+										}
+									}
 								}
 								
 							}
@@ -177,9 +212,17 @@
 				{
 					$this->view->showMessage($e->getMessage());
 				}
+				
 			}
+			if($this->model->UserRegistered() == false)
+			{
 
-			return $this->view->showRegisterPage();
+			
+			
+				return $this->view->showRegisterPage();
+			}
+			
+		
 
 
 		}

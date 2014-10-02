@@ -5,6 +5,8 @@
 		private $correctUsername = "";
 		private $correctPassword = "";
 		private $sessionUserAgent;
+		private $success = false;
+		
 
 		protected $dbUsername = "root";
 		protected $dbPassword = "";
@@ -103,6 +105,7 @@
 
 				$query = $db -> prepare($sql);
 				$query -> execute($params);
+				$this->success = true;
 
 			} catch (\PDOException $e) {
 				die('An unknown error have occured.');
@@ -151,6 +154,27 @@
 			}
 			return true;
 		}
+
+		public function UserRegistered(){
+
+			return $this->success;
+		}
+
+		public function UserLogin(){
+
+			return $this->loginsuccess;
+		}
+
+		public function encryptPassword($pw){
+
+			return base64_encode($pw);
+		}
+
+		public function decodePassword($pwcrypt){
+
+			return base64_decode($pwcrypt);
+		}
+
 
 		
 		
@@ -213,6 +237,8 @@
 				throw new Exception("Lösenord saknas");
 			}
 			
+			var_dump($inputUsername);
+			var_dump($inputPassword);
 			// Kontrollerar ifall inparametrarna matchar de faktiska användaruppgifterna.
 			if($inputUsername == $DB_Username && $inputPassword == $DB_Password)
 			{
@@ -257,6 +283,7 @@
 		// Logout-metod som avsätter och förstör sessionen.
 		public function logOut()
 		{
+			
 			session_unset();
 			session_destroy();
 		}

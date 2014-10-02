@@ -7,10 +7,9 @@
 			echo "
 				<!DOCTYPE html>
 				<html>
-					<head>
-						<meta charset='utf-8'>
-					</head>
-					<body>
+				<head>
+				<meta charset='iso-8859-1'>
+				<body>
 						$body
 					</body>
 				</html>";

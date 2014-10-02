@@ -37,6 +37,8 @@ require_once 'common/HTMLView.php';
 			
 		}
 
+
+
 		public function didUserPressCreateUser(){
 
 			if(isset($_POST['createuserbutton']))
@@ -119,7 +121,71 @@ require_once 'common/HTMLView.php';
 			}
 			
 			$HTMLbody = "
-				<h1>Laboration 2 - ed222an</h1>
+				<h1>Laboration 2 - ek222mw</h1>
+				<h2>$this->loginStatus</h2>
+				<p><a href='?register'>Registrera ny användare</a></p>
+				$contentString
+				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+			if($this->model->checkLoginStatus())
+			{
+			$HTMLbody = "
+				<h1>Laboration 2 - ek222mw</h1>
+				<h2>$this->loginStatus</h2>
+				
+				$contentString
+				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+			}
+
+			$this->echoHTML($HTMLbody);
+		}
+
+
+		public function showLoginPageWithRegname()
+		{
+			// Variabler
+			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
+			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
+			$year = strftime("%Y");
+			$time = strftime("%H:%M:%S");
+			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
+			
+			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
+			if($this->model->checkLoginStatus())
+			{				
+				// ...visa användarsidan...
+				$contentString = "
+					$this->message
+					<p><a href='?logout'>Logga ut</a></p>";
+				$this->loginStatus = $this->model->getLoggedInUser() . " är inloggad";
+			}
+			else 
+			{
+				
+				
+					// ...annars visas inloggningssidan.
+					$this->loginStatus = "Ej inloggad";
+					$contentString = 
+					"<form id='loginForm' method=post action='?login'>
+						<fieldset>
+							<legend>Login - Skriv in användarnamn och lösenord</legend>
+							$this->message
+							Namn: <input type='text' name='$this->username' value='" . $this->getRegisterUsername() . "'>
+							Lösenord: <input type='password' name='$this->password'> 
+							<input type='checkbox' name='$this->checkbox' value='checked'>Håll mig inloggad:
+							<button type='submit' name='button' form='loginForm' value='Submit'>Logga in</button>
+						</fieldset>
+					</form>";
+				
+			}
+			
+			// Kontrollerar ifall windowsformatet används och ersätter %e med en fungerande del.
+			if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
+			{
+    			$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
+			}
+			
+			$HTMLbody = "
+				<h1>Laboration 2 - ek222mw</h1>
 				<h2>$this->loginStatus</h2>
 				<p><a href='?register'>Registrera ny användare</a></p>
 				$contentString
@@ -175,7 +241,7 @@ require_once 'common/HTMLView.php';
 					}
 
 					$HTMLbody = "
-				<h1>Laboration 2 - ed222an</h1>
+				<h1>Laboration 2 - ek222mw</h1>
 				
 				<p><a href='?login'>Tillbaka</a></p>
 				
@@ -194,7 +260,7 @@ require_once 'common/HTMLView.php';
 		public function createCookies($usernameToSave, $passwordToSave)
 		{
 			// Bestämmer cookies livslängd.
-			$cookieExpirationTime = time()+60*60*24*30;
+			$cookieExpirationTime = time()+ 60;
 			
 			// Skapar cookies.
 			setcookie("Username", $usernameToSave, $cookieExpirationTime);
@@ -221,7 +287,7 @@ require_once 'common/HTMLView.php';
 			$this->model->validateExpirationTime();
 			
 			// Validera kakornas innehåll.
-			$this->model->verifyUserInput($_COOKIE["Username"], $_COOKIE["Password"], true);
+			$this->model->verifyUserInput($_COOKIE["Username"], $this->model->decodePassword($_COOKIE["Password"]), true);
 			
 			// Visa rättmeddelande.
 			$this->showMessage("Inloggningen lyckades via cookies");
@@ -270,6 +336,11 @@ require_once 'common/HTMLView.php';
 		public function successfulLogout()
 		{
 			$this->showMessage("Du har nu loggat ut");
+		}
+
+		public function successfulRegistration()
+		{
+			$this->showMessage("Registrering av ny användare lyckades");
 		}
 
 
