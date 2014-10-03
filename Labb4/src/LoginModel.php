@@ -2,17 +2,17 @@
 
 	class LoginModel
 	{
-		private $correctUsername = "";
-		private $correctPassword = "";
+		
 		private $sessionUserAgent;
 		private $success = false;
 		
+        
 
-		protected $dbUsername = "root";
+		protected $dbUsername = "";
 		protected $dbPassword = "";
-		protected $dbConnstring = 'mysql:host=127.0.0.1;dbname=login';
+		protected $dbConnstring = '';
 		protected $dbConnection;
-		protected $dbTable = "login";
+		protected $dbTable = "";
 		
 		public function __construct($userAgent)
 		{
@@ -237,8 +237,7 @@
 				throw new Exception("Lösenord saknas");
 			}
 			
-			var_dump($inputUsername);
-			var_dump($inputPassword);
+			
 			// Kontrollerar ifall inparametrarna matchar de faktiska användaruppgifterna.
 			if($inputUsername == $DB_Username && $inputPassword == $DB_Password)
 			{

@@ -8,6 +8,7 @@
 	// Ställer in sidans format så att månad, år, tid etc. visas på svenska.
 	setlocale(LC_ALL , "swedish");
 	
+	
 	require_once("common/HTMLView.php");
 	require_once("src/LoginController.php");
 	

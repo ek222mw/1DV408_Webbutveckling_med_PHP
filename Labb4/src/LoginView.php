@@ -79,10 +79,11 @@ require_once 'common/HTMLView.php';
 		public function showLoginPage()
 		{
 			// Variabler
+			
 			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
 			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
 			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
+			$time = ucwords((strftime("%H:%M:%S")));
 			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
 			
 			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
@@ -101,7 +102,8 @@ require_once 'common/HTMLView.php';
 					// ...annars visas inloggningssidan.
 					$this->loginStatus = "Ej inloggad";
 					$contentString = 
-					"<form id='loginForm' method=post action='?login'>
+					"
+					<form id='loginForm' method=post action='?login'>
 						<fieldset>
 							<legend>Login - Skriv in användarnamn och lösenord</legend>
 							$this->message
@@ -110,7 +112,8 @@ require_once 'common/HTMLView.php';
 							<input type='checkbox' name='$this->checkbox' value='checked'>Håll mig inloggad:
 							<button type='submit' name='button' form='loginForm' value='Submit'>Logga in</button>
 						</fieldset>
-					</form>";
+						</form>
+						";
 				
 			}
 			
@@ -121,6 +124,7 @@ require_once 'common/HTMLView.php';
 			}
 			
 			$HTMLbody = "
+			    
 				<h1>Laboration 2 - ek222mw</h1>
 				<h2>$this->loginStatus</h2>
 				<p><a href='?register'>Registrera ny användare</a></p>
@@ -137,17 +141,22 @@ require_once 'common/HTMLView.php';
 			}
 
 			$this->echoHTML($HTMLbody);
+			
 		}
 
 
 		public function showLoginPageWithRegname()
 		{
 			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
+			
+		$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
 			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
 			$year = strftime("%Y");
 			$time = strftime("%H:%M:%S");
 			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
+			
+		
+
 			
 			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
 			if($this->model->checkLoginStatus())
@@ -197,10 +206,11 @@ require_once 'common/HTMLView.php';
 		public function showRegisterPage(){
 
 			// Variabler
+		
 			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
 			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
 			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
+			$time = ucwords(strftime("%H:%M:%S"));
 			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
 			
 			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
@@ -260,7 +270,7 @@ require_once 'common/HTMLView.php';
 		public function createCookies($usernameToSave, $passwordToSave)
 		{
 			// Bestämmer cookies livslängd.
-			$cookieExpirationTime = time()+ 60;
+			$cookieExpirationTime = time()+60;
 			
 			// Skapar cookies.
 			setcookie("Username", $usernameToSave, $cookieExpirationTime);
