@@ -12,6 +12,34 @@
 				$this->loginmodel = $model;
 		}
 
+		public function getEventName(){
+
+			if(isset($_POST['createevent']))
+			{
+				return $_POST['createevent'];
+			}
+			return false;
+		}
+
+		public function getBandName(){
+
+			if(isset($_POST['createband']))
+			{
+				return $_POST['createband'];
+			}
+			return false;
+		}
+
+		public function didUserPressAddEventButton(){
+
+			if(isset($_POST['createeventbutton']))
+			{
+				return true;
+			}
+			return false;
+
+		}
+
 		public function ShowAddEventPage(){
 
 			// Variabler
@@ -55,6 +83,12 @@
 			public function showMessage($message)
 			{
 				$this->message = "<p>" . $message . "</p>";
+			}
+
+				// Visar Lägga till event-meddelande.
+			public function successfulAddEvent()
+			{
+				$this->showMessage("Eventet lades till!");
 			}
 
 		

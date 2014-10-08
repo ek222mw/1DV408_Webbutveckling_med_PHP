@@ -237,8 +237,7 @@
 				throw new Exception("Lösenord saknas");
 			}
 			
-			var_dump($inputUsername);
-			var_dump($inputPassword);
+			
 			// Kontrollerar ifall inparametrarna matchar de faktiska användaruppgifterna.
 			if($inputUsername == $DB_Username && $inputPassword == $DB_Password)
 			{

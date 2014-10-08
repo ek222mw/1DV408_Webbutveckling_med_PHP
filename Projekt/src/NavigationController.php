@@ -27,7 +27,7 @@
 			if($this->view->didUserPressAddEvent() && $this->model->checkLoginStatus())
 			{
 				$AddEventBandC = new AddBandEventController();
-				$htmlBodyAddBandEvent = $AddEventBandC->doHTMLBody();
+				
 			}
 		}
 
