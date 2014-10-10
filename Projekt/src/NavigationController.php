@@ -3,8 +3,9 @@
 	require_once("./common/HTMLView.php");
 	require_once("LoginController.php");
 	require_once("AddBandEventController.php");
-	require_once("src/LoginModel.php");
-	require_once("src/LoginView.php");
+	require_once("LoginModel.php");
+	require_once("LoginView.php");
+	require_once("AddRatingController.php");
 	
 	
 	class NavigationController{
@@ -18,17 +19,19 @@
 			$this->view = new LoginView($this->model);
 
 			
-			if(!$this->view->didUserPressAddEvent())
+			if(!$this->view->didUserPressAddEvent() && !$this->view->didUserPressAddRating() && !$this->view->didUserPressAddBandToEvent() && !$this->view->didUserPressAddBand())
 			{
 				$loginC = new LoginController();
 				$htmlBodyLogin = $loginC->doHTMLBody();
 			}
 
-			if($this->view->didUserPressAddEvent() && $this->model->checkLoginStatus())
+			if(($this->view->didUserPressAddEvent() || $this->view->didUserPressAddBandToEvent() || $this->view->didUserPressAddBand()) && $this->model->checkLoginStatus())
 			{
 				$AddEventBandC = new AddBandEventController();
 				
 			}
+
+			
 		}
 
 

@@ -4,6 +4,8 @@
 	require_once("src/LoginView.php");
 	require_once("src/AddBandEventModel.php");
 	require_once("src/AddBandEventView.php");
+	require_once("Event.php");
+	require_once("EventList.php");
 
 	class AddBandEventController{
 
@@ -13,25 +15,42 @@
 		private $addeventview;
 
 		public function __construct(){
-
+			
 			// Sparar ner användarens användaragent och ip. Används vid verifiering av användaren.
 			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 						
 			// Skapar nya instanser av modell- & vy-klassen.
+			$this->db = new DBDetails();
 			$this->loginmodel = new LoginModel($userAgent);
 			$this->loginview = new LoginView($this->loginmodel);
 			$this->addeventmodel = new AddBandEventModel($userAgent);
 			$this->addeventview = new AddBandEventView($this->loginmodel);
 
-			$this->doControll();
+			if($this->loginview->didUserPressAddEvent() && $this->loginmodel->checkLoginStatus())
+			{
+				$this->doControllEvent();
+			}
+			
+			if($this->loginview->didUserPressAddBand() && $this->loginmodel->checkLoginStatus())
+			{
+				
+				$this->doControllBand();
+			}
+
+			if($this->loginview->didUserPressAddBandToEvent() && $this->loginmodel->checkLoginStatus())
+			{
+				$this->doControllBandToEvent();
+			}
+
+
 		}
 
-		public function doControll(){
+		public function doControllEvent(){
 
 			if($this->loginview->didUserPressAddEvent() && $this->loginmodel->checkLoginStatus())
 			{	
 				$event = $this->addeventview->getEventName();
-				$band = $this->addeventview->getBandName();
+				
 
 
 				try{
@@ -39,23 +58,19 @@
 					if($this->addeventview->didUserPressAddEventButton())
 					{
 
-						if($this->addeventmodel->CheckBothAddEventBandInput($event,$band))
-						{
 							if($this->addeventmodel->CheckEventLength($event))
 							{
-								if($this->addeventmodel->CheckBandLength($band))
-								{
-									if($this->addeventmodel->checkIfEventExist($event,$band))
+								
+									if($this->db->checkIfEventExist($event))
 									{
 										
-									$this->addeventmodel->AddEvent($event,$band);
+									$this->db->AddEvent($event);
 									$this->addeventview->successfulAddEvent();
-									
-									}
-								}
-							}
 
-						}
+									}
+								
+							}
+						
 					}
 				}
 				catch(Exception $e)
@@ -68,11 +83,85 @@
 		}
 
 
+		public function doControllBand(){
+		
+
+			if($this->loginview->didUserPressAddBand() && $this->loginmodel->checkLoginStatus())
+			{
+
+				$band = $this->addeventview->getBandName();
+				
+
+				try{
+					
+					if($this->addeventview->didUserPressAddBandButton())
+					{
+						
+
+						if($this->addeventmodel->CheckBandLength($band))
+						{
+							if($this->db->checkIfBandExist($band))
+							{
+								$this->db->addBand($band);
+								$this->addeventview->successfulAddBand();
+
+							}
+							
+						}
+					}
+
+				}
+				catch(Exception $e)
+				{
+					$this->addeventview->showMessage($e->getMessage());
+				}
+
+			}
+
+			$this->doHTMLBody();
+
+		}
+
+		public function doControllBandToEvent(){
+
+			if($this->loginview->didUserPressAddBandToEvent() && $this->loginmodel->checkLoginStatus())
+			{
+				$eventdropdownvalue = $this->addeventview->pickedEventDropdownValue();
+
+
+
+			}
+
+			$this->doHTMLBody();
+
+
+		}
+
+
 		public function doHTMLBody()
 		{
 			
+				if($this->loginview->didUserPressAddEvent())
+				{
+					$this->addeventview->ShowAddEventPage();
+				}
+
+				if($this->loginview->didUserPressAddBand())
+				{
+					$this->addeventview->ShowAddBandPage();
+				}
+
+				if($this->loginview->didUserPressAddBandToEvent())
+				{
+					$events = $this->db->fetchAllEvents();
+					$bands = $this->db->fetchAllBands();
+					
+
+					$this->addeventview->ShowAddBandToEventPage($events, $bands);
+				}
+
 				
-				$this->addeventview->ShowAddEventPage();
+				
 			
 			
 		}

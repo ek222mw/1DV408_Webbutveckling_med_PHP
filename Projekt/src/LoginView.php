@@ -80,6 +80,24 @@ require_once 'common/HTMLView.php';
 			}
 			return false;
 		}
+
+
+		public function didUserPressAddRating()
+		{
+
+			return isset($_GET['addrating']);
+		}
+
+		public function didUserPressAddBandToEvent()
+		{
+			return isset($_GET['addbandtoevent']);
+		}
+
+		public function didUserPressAddBand()
+		{
+
+			return isset($_GET['addband']);
+		}
 		
 		// Sätter body-innehållet.
 		public function showLoginPage()
@@ -138,6 +156,9 @@ require_once 'common/HTMLView.php';
 				
 				<h2>$this->loginStatus</h2>
 				<p><a href='?addevent'>Lägg till spelning</a></p>
+				<p><a href='?addband'>Lägg till band</a></p>
+				<p><a href='?addbandtoevent'>Lägg till band till event</a></p>
+				<p><a href='?addrating'>Lägg till betyg till spelning</a></p>
 				$contentString
 				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
 			}
