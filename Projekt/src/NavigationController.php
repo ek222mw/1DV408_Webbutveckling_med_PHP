@@ -31,6 +31,11 @@
 				
 			}
 
+			if($this->view->didUserPressAddRating() && $this->model->checkLoginStatus())
+			{
+				$AddRatingC = new AddRatingController();
+			}
+
 			
 		}
 

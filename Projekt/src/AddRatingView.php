@@ -12,7 +12,28 @@
 				$this->loginmodel = $model;
 		}
 
-		public function ShowAddRatingPage(){
+		public function didUserPressAddGradeButton(){
+
+			if(isset($_POST['creategradebutton']))
+			{
+				return true;
+			}
+			return false;
+		}
+
+		public function pickedGradeDropdownValue(){
+
+			if(isset($_POST['dropdownpickgrade']))
+			{
+				return $_POST['dropdownpickgrade'];
+			}
+			return false;
+
+		}
+
+		public function ShowAddRatingPage(EventList $eventlist, BandList $bandlist, GradeList $gradelist){
+
+			
 
 			// Variabler
 			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
@@ -30,24 +51,34 @@
 					 "
 					<form method=post >
 						<fieldset>
-							<legend>Lägga till nytt betyg för spelning - Ange spelning till vilket betyg</legend>
+							<legend>Lägga till nytt betyg till spelning med följande band</legend>
 							$this->message
 							Plats:
-							 <select name='dropdownpickevent'>
-							 <option value='101'>101</option>
-							 <option value='102'>102</option>
-							 <option value='103'>103</option>
-							 <option value='104'>104</option>
-							 <option value='105'>105</option>
-							 <option value='106'>106</option>
-							 <option value='107'>107</option>
-							 <option value='108'>108</option>
-							 <option value='109'>109</option>
-							 <option value='110'>110</option>
-							 </select>
+							 <select name='dropdownpickevent'>";
+							 foreach($eventlist->toArray() as $event)
+							 {
+							 	$contentString.= "<option value='". $event->getID()."'>".$event->getName()."</option>";
+							 }
+							 
+							 $contentString .= "</select>
 							 <br>
-							Betyg: <input type='number' name='createrating'><br>
-							Skicka: <input type='submit' name='createratingbutton'  value='Skapa'>
+							Band:
+							<select name='dropdownpickband'>";
+							 foreach($bandlist->toArray() as $band)
+							 {
+							 	$contentString.= "<option value='". $band->getID()."'>".$band->getName()."</option>";
+							 }
+							 
+							 $contentString .= "</select><br>
+							 Betyg:
+							<select name='dropdownpickgrade'>";
+							 foreach($gradelist->toArray() as $grade)
+							 {
+							 	$contentString.= "<option value='". $grade->getID()."'>".$grade->getGrade()."</option>";
+							 }
+							 
+							 $contentString .= "</select><br>
+							Skicka: <input type='submit' name='creategradebutton'  value='Lägg till Betyg'>
 						</fieldset>
 					</form>";
 
@@ -57,12 +88,13 @@
 					}
 
 					$HTMLbody = "
-				<h1>Skapa ny betyg för spelning</h1>
+				<h1>Lägg till betyg till vald spelning med band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
 				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
 
 				$this->echoHTML($HTMLbody);
+			
 			}
 
 			public function showMessage($message)
@@ -71,9 +103,9 @@
 			}
 
 				// Visar Lägga till event-meddelande.
-			public function successfulAddEvent()
+			public function successfulAddGradeToEventWithBand()
 			{
-				$this->showMessage("Betyget lades till!");
+				$this->showMessage("Betyget har lagts till event med band!");
 			}
 
 

@@ -158,7 +158,7 @@ require_once 'common/HTMLView.php';
 				<p><a href='?addevent'>Lägg till spelning</a></p>
 				<p><a href='?addband'>Lägg till band</a></p>
 				<p><a href='?addbandtoevent'>Lägg till band till event</a></p>
-				<p><a href='?addrating'>Lägg till betyg till spelning</a></p>
+				<p><a href='?addrating'>Lägg till betyg till spelning med angivet band</a></p>
 				$contentString
 				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
 			}

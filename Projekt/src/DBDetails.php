@@ -2,6 +2,7 @@
 
 	require_once("BandList.php");
 	require_once("EventList.php");
+	require_once("GradeList.php");
 
 	class DBDetails{
 
@@ -16,6 +17,7 @@
 			private static $id = "id";
 			private static $bid = "bid";
 			private static $eid = "eid";
+			private static $gid = "gid";
 			private static $eventband = "eventband";
 			private static $username = "username";
 			private static $password = "password";
@@ -104,6 +106,58 @@
 
 		}
 
+
+		public function checkIfBandExistsOnEvent($eventdropdown, $banddropdown){
+
+				$db = $this -> connection();
+				$this->dbTable = "eventband";
+				$sql = "SELECT ". self::$eid .",". self::$bid ." FROM `".$this->dbTable."` WHERE ". self::$eid ." = ? AND ". self::$bid ." = ?";
+				$params = array($eventdropdown,$banddropdown);
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetch();
+				
+				
+
+				
+				if ($result['eid'] !== null && $result['bid'] !== null ) {
+
+					throw new Exception("Spelning innehåller redan det bandet du försöker lägga till");
+
+				}else{
+
+					return true;
+				}
+
+		}
+
+		public function checkIfGradeExistOnEventBandUser($eventdropdown,$banddropdown,$username){
+
+				$db = $this -> connection();
+				$this->dbTable = "summarygrade";
+				$sql = "SELECT ". self::$eid .",". self::$bid .",". self::$username ." FROM `".$this->dbTable."` WHERE ". self::$eid ." = ? AND ". self::$bid ." = ? AND ". self::$username ." = ?";
+				$params = array($eventdropdown,$banddropdown,$username);
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetch();
+								
+
+				
+				if ($result['eid'] !== null && $result['bid'] !== null && $result['username'] !== null ) {
+
+					throw new Exception("Spelningen med det bandet och användarnamn har redan ett betyg");
+
+				}else{
+
+					return true;
+				}
+
+		}
+
 		public function fetchAllEvents()
 		{
 				$db = $this -> connection();
@@ -148,6 +202,29 @@
 
 		}
 
+		public function fetchAllGrades()
+		{
+
+				$db = $this -> connection();
+				$this->dbTable = "rating";
+				$sql = "SELECT * FROM `$this->dbTable`";
+				
+
+				$query = $db -> prepare($sql);
+				$query -> execute();
+
+				$result = $query -> fetchall();
+				$grades = new GradeList();
+				foreach ($result as $gradedb) {
+					$grade = new Grade($gradedb['rating'], $gradedb['ID']);
+					$grades->add($grade);
+
+				}
+				return $grades;
+
+
+		}
+
 
 		public function addBand($inputband)
 		{
@@ -169,31 +246,47 @@
 
 		}
 
-		public function addBandToEvent($dropdownvalue)
+		public function addBandToEvent($eventdropdown,$banddropdown)
 		{
 
-				$db = $this -> connection();
-				$this->dbTable = "band";
-				$sql = "SELECT ". self::$id ." FROM `$this->dbTable` as b JOIN ". self::$eventband ." as be ON b.". self::$id ." = be.". self::$bid ." ";
-				
+				try {
+					$db = $this -> connection();
+					$this->dbTable = "eventband";
 
-				$query = $db -> prepare($sql);
-				$query -> execute();
+					$sql = "INSERT INTO $this->dbTable (".self::$eid.",". self::$bid .") VALUES (?,?)";
+					$params = array($eventdropdown,$banddropdown);
 
-				$result = $query -> fetchall();
-				$var_dump($result);
-				/*$events = new EventList();
-				foreach ($result as $eventdb) {
-					$event = new Event($eventdb['event'], $eventdb['id']);
-					$events->add($event);
+					$query = $db -> prepare($sql);
+					$query -> execute($params);
+					
 
+				} catch (\PDOException $e) {
+					die('An unknown error have occured.');
 				}
-				return $events;*/
 
 
 
 
 
+
+		}
+
+		public function addGradeToEventBandWithUser($eventdropdown,$banddropdown,$gradedropdown,$username){
+
+			try {
+					$db = $this -> connection();
+					$this->dbTable = "summarygrade";
+
+					$sql = "INSERT INTO $this->dbTable (".self::$eid.",". self::$bid .",". self::$gid .", ". self::$username .") VALUES (?,?,?,?)";
+					$params = array($eventdropdown,$banddropdown,$gradedropdown,$username);
+
+					$query = $db -> prepare($sql);
+					$query -> execute($params);
+					
+
+				} catch (\PDOException $e) {
+					die('An unknown error have occured.');
+				}
 
 		}
 

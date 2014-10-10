@@ -7,6 +7,7 @@
 	require_once("AddBandEventView.php");
 	require_once("AddRatingView.php");
 	require_once("AddRatingModel.php");
+	require_once("DBDetails.php");
 
 	class AddRatingController{
 
@@ -17,7 +18,7 @@
 		private $addeventview;
 		private $addratingview;
 		private $addratingmodel;
-
+		private $db;
 
 		public function __construct(){
 
@@ -27,10 +28,12 @@
 			// Skapar nya instanser av modell- & vy-klasser.
 			$this->loginmodel = new LoginModel($userAgent);
 			$this->loginview = new LoginView($this->loginmodel);
-			$this->addeventmodel = new AddBandEventModel($userAgent);
+			$this->addeventmodel = new AddBandEventModel();
 			$this->addeventview = new AddBandEventView($this->loginmodel);
 			$this->addratingview = new AddRatingView($this->loginmodel);
 			$this->addratingmodel = new AddRatingModel();
+			$this->db = new DBDetails();
+
 
 			$this->doControll();
 		}
@@ -39,11 +42,35 @@
 
 			if($this->loginview->didUserPressAddRating() && $this->loginmodel->checkLoginStatus())
 			{
-				$this->addratingmodel->getDropdownlistEvent();
+				
+				$eventdropdownvalue = $this->addeventview->pickedEventDropdownValue();
+				$banddropdownvalue = $this->addeventview->pickedBandDropdownValue();
+				$gradedropdownvalue = $this->addratingview->pickedGradeDropdownValue();
+				$loggedinUser = $this->loginmodel->getLoggedInUser();
 
-				$this->doHTMLBody();
+
+				try{
+
+					if($this->addratingview->didUserPressAddGradeButton())
+					{
+						if($this->db->checkIfGradeExistOnEventBandUser($eventdropdownvalue,$banddropdownvalue,$loggedinUser))
+						{
+							$this->db->addGradeToEventBandWithUser($eventdropdownvalue,$banddropdownvalue,$gradedropdownvalue,$loggedinUser);
+							$this->addratingview->successfulAddGradeToEventWithBand();
+						}
+
+					}
+
+				}
+				catch(Exception $e)
+				{
+					$this->addratingview->showMessage($e->getMessage());
+				}
+
+				
 			}
 
+			$this->doHTMLBody();
 
 		}
 
@@ -51,8 +78,11 @@
 
 		public function doHTMLBody()
 		{
-			
-				$this->addratingview->ShowAddRatingPage();
+				$events = $this->db->fetchAllEvents();
+				$bands = $this->db->fetchAllBands();
+				$grades = $this->db->fetchAllGrades();
+
+				$this->addratingview->ShowAddRatingPage($events,$bands,$grades);
 		
 		}
 

@@ -202,8 +202,8 @@
 							 	$contentString.= "<option value='". $band->getID()."'>".$band->getName()."</option>";
 							 }
 							 
-							 $contentString .= "</select>
-							Skicka: <input type='submit' name='createbandeventbutton'  value='Skapa'>
+							 $contentString .= "</select><br>
+							Skicka: <input type='submit' name='createbandeventbutton'  value='Lägg till'>
 						</fieldset>
 					</form>";
 
@@ -235,6 +235,11 @@
 			public function successfulAddBand()
 			{
 				$this->showMessage("Bandet lades till!");
+			}
+
+			public function successfulAddBandToEvent()
+			{
+				$this->showMessage("Bandet har lagt tills i event");
 			}
 
 		

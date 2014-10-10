@@ -8,16 +8,12 @@
 
 		public function __construct(){
 
-			
-			$this->db = new DBDetails();
-		}
+				
+				$this->db = new DBDetails();
+			}
 
 
-		public function getDropdownlistEvent(){
 
-			var_dump($this->db->fetchAllEvents());
-
-		}
 
 
 

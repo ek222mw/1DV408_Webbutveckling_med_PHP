@@ -6,9 +6,9 @@
 
 			private $db;
 
-			public function __construct($userAgent){
+			public function __construct(){
 
-				$this->sessionUserAgent = $userAgent;
+				
 				$this->db = new DBDetails();
 			}
 

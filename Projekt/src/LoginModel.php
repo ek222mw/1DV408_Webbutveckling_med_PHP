@@ -245,6 +245,7 @@
 				$_SESSION['loggedIn'] = true;
 				$_SESSION['loggedInUser'] = $inputUsername;
 				
+				
 				// Sparar useragent i sessionen.
 				$_SESSION['sessionUserAgent'] = $this->sessionUserAgent;
 								

@@ -93,7 +93,7 @@
 				
 
 				try{
-					
+
 					if($this->addeventview->didUserPressAddBandButton())
 					{
 						
@@ -127,6 +127,28 @@
 			if($this->loginview->didUserPressAddBandToEvent() && $this->loginmodel->checkLoginStatus())
 			{
 				$eventdropdownvalue = $this->addeventview->pickedEventDropdownValue();
+				$banddropdownvalue = $this->addeventview->pickedBandDropdownValue();
+				
+				
+				try{
+
+					if($this->addeventview->didUserPressAddBandToEventButton())
+					{
+
+						if($this->db->checkIfBandExistsOnEvent($eventdropdownvalue,$banddropdownvalue))
+						{
+							$this->db->addBandToEvent($eventdropdownvalue,$banddropdownvalue);
+							$this->addeventview->successfulAddBandToEvent();
+
+						}
+					}
+
+				}
+				catch(Exception $e)
+				{
+					$this->addeventview->showMessage($e->getMessage());
+				}
+
 
 
 
