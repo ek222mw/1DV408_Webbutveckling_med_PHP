@@ -76,7 +76,7 @@
 							 <select name='dropdownpickevent'>";
 							 foreach($eventbandlist->toArray() as $event)
 							 {
-							 	$contentString.= "<option value='". $event->getID()."'>".$event->getName()."</option>";
+							 	$contentString.= "<option value='". $event->getName()."'>".$event->getName()."</option>";
 							 }
 							 
 							 $contentString .= "</select>
@@ -85,7 +85,7 @@
 							<select name='dropdownpickband'>";
 							 foreach($bandeventlist->toArray() as $band)
 							 {
-							 	$contentString.= "<option value='". $band->getID()."'>".$band->getName()."</option>";
+							 	$contentString.= "<option value='". $band->getName()."'>".$band->getName()."</option>";
 							 }
 							 
 							 $contentString .= "</select><br>
@@ -93,7 +93,7 @@
 							<select name='dropdownpickgrade'>";
 							 foreach($gradelist->toArray() as $grade)
 							 {
-							 	$contentString.= "<option value='". $grade->getID()."'>".$grade->getGrade()."</option>";
+							 	$contentString.= "<option value='". $grade->getGrade()."'>".$grade->getGrade()."</option>";
 							 }
 							 
 							 $contentString .= "</select><br>
@@ -142,7 +142,7 @@
 							 <select name='dropdownpickevent'>";
 							 foreach($eventbandlist->toArray() as $event)
 							 {
-							 	$contentString.= "<option value='". $event->getID()."'>".$event->getName()."</option>";
+							 	$contentString.= "<option value='". $event->getName()."'>".$event->getName()."</option>";
 							 }
 							 
 							 $contentString .= "</select>
@@ -151,7 +151,7 @@
 							<select name='dropdownpickband'>";
 							 foreach($bandeventlist->toArray() as $band)
 							 {
-							 	$contentString.= "<option value='". $band->getID()."'>".$band->getName()."</option>";
+							 	$contentString.= "<option value='". $band->getName()."'>".$band->getName()."</option>";
 							 }
 							 
 							 $contentString .= "</select><br>
@@ -159,7 +159,7 @@
 							<select name='dropdownpickgrade'>";
 							 foreach($gradelist->toArray() as $grade)
 							 {
-							 	$contentString.= "<option value='". $grade->getID()."'>".$grade->getGrade()."</option>";
+							 	$contentString.= "<option value='". $grade->getGrade()."'>".$grade->getGrade()."</option>";
 							 }
 							 
 							 $contentString .= "</select><br>
@@ -180,6 +180,68 @@
 
 				$this->echoHTML($HTMLbody);
 			
+			}
+
+
+			public function ShowAllEventsWithBandGrades(ShowEventList $showeventlist)
+			{
+
+					// Variabler
+			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
+			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
+			$year = strftime("%Y");
+			$time = strftime("%H:%M:%S");
+			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
+			
+			
+
+
+			// visa Lägga till event och band sidan.
+				
+					$contentString = 
+					 "
+					<form method=post >
+						
+							<legend>Visar Alla event</legend><br>";
+							
+							 foreach($showeventlist->toArray() as $event)
+							 {
+							 	$contentString .= "
+								<fieldset>
+								";
+							 	$contentString .= "
+								<br>Event:
+								";
+							 	$contentString.= "<p>".$event->getEvent()."</p>";
+							 	$contentString .= "
+								<br>Band:
+								";
+							 	$contentString.= "<p>".$event->getBand()."</p>";
+							 	$contentString .= "
+							 	<br>Betyg:
+								";
+								$contentString.= "<p>".$event->getGrade()."</p>";
+								$contentString .= "
+							
+						</fieldset><br>";
+							 }
+							 
+							 $contentString .= "</form>";
+
+					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
+					{
+    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
+					}
+
+					$HTMLbody = "
+				<h1>Visar alla events med band och betyg</h1>
+				<p><a href='?login'>Tillbaka</a></p>
+				$contentString<br>
+				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+
+				$this->echoHTML($HTMLbody);
+
+
 			}
 
 			public function showMessage($message)

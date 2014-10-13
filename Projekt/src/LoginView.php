@@ -43,6 +43,11 @@ require_once 'common/HTMLView.php';
 			return isset($_GET['addevent']);
 		}
 
+		public function didUserPressShowAllEvents()
+		{
+			return isset($_GET['showevents']);
+		}
+
 
 
 		public function didUserPressCreateUser(){
@@ -157,8 +162,9 @@ require_once 'common/HTMLView.php';
 				<h2>$this->loginStatus</h2>
 				<p><a href='?addevent'>Lägg till spelning</a></p>
 				<p><a href='?addband'>Lägg till band</a></p>
-				<p><a href='?addbandtoevent'>Lägg till band till event</a></p>
+				<p><a href='?addbandtoevent'>Lägg till band till spelning</a></p>
 				<p><a href='?addrating'>Lägg till betyg till spelning med angivet band</a></p>
+				<p><a href='?showevents'>Visa spelningar med band samt betyg</a></p>
 				$contentString
 				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
 			}

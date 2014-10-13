@@ -4,6 +4,7 @@
 	require_once("EventList.php");
 	require_once("GradeList.php");
 	require_once("EventBandList.php");
+	require_once("ShowEventList.php");
 
 	class DBDetails{
 
@@ -19,6 +20,7 @@
 			private static $bid = "bid";
 			private static $eid = "eid";
 			private static $gid = "gid";
+			private static $grade = "grade";
 			private static $eventband = "eventband";
 			private static $username = "username";
 			private static $password = "password";
@@ -138,7 +140,7 @@
 
 				$db = $this -> connection();
 				$this->dbTable = "summarygrade";
-				$sql = "SELECT ". self::$eid .",". self::$bid .",". self::$username ." FROM `".$this->dbTable."` WHERE ". self::$eid ." = ? AND ". self::$bid ." = ? AND ". self::$username ." = ?";
+				$sql = "SELECT ". self::$event .",". self::$band .",". self::$username ." FROM `".$this->dbTable."` WHERE ". self::$event ." = ? AND ". self::$band ." = ? AND ". self::$username ." = ?";
 				$params = array($eventdropdown,$banddropdown,$username);
 
 				$query = $db -> prepare($sql);
@@ -254,7 +256,7 @@
 		{
 				$db = $this -> connection();
 				$this->dbTable = "eventband";
-				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$id ." = ?";
+				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$event ." = ?";
 				$params = array($eventdropdown);
 				
 
@@ -276,7 +278,7 @@
 		{
 				$db = $this -> connection();
 				$this->dbTable = "eventband";
-				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$id ." = ?";
+				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$event ." = ?";
 				$params = array($eventdropdown);
 				
 
@@ -315,6 +317,26 @@
 				return $grades;
 
 
+		}
+
+		public function fetchShowAllEvents()
+		{
+				$db = $this -> connection();
+				$this->dbTable = "summarygrade";
+				$sql = "SELECT * FROM `$this->dbTable`";
+				
+
+				$query = $db -> prepare($sql);
+				$query -> execute();
+
+				$result = $query -> fetchall();
+				$showevents = new ShowEventList();
+				foreach ($result as $showeventdb) {
+					$showevent = new ShowEvent($showeventdb['band'], $showeventdb['id'], $showeventdb['event'], $showeventdb['grade']);
+					$showevents->add($showevent);
+
+				}
+				return $showevents;
 		}
 
 
@@ -369,7 +391,7 @@
 					$db = $this -> connection();
 					$this->dbTable = "summarygrade";
 
-					$sql = "INSERT INTO $this->dbTable (".self::$eid.",". self::$bid .",". self::$gid .", ". self::$username .") VALUES (?,?,?,?)";
+					$sql = "INSERT INTO $this->dbTable (".self::$event.",". self::$band .",". self::$grade .", ". self::$username .") VALUES (?,?,?,?)";
 					$params = array($eventdropdown,$banddropdown,$gradedropdown,$username);
 
 					$query = $db -> prepare($sql);
