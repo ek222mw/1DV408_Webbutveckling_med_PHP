@@ -3,6 +3,7 @@
 	require_once("BandList.php");
 	require_once("EventList.php");
 	require_once("GradeList.php");
+	require_once("EventBandList.php");
 
 	class DBDetails{
 
@@ -111,7 +112,7 @@
 
 				$db = $this -> connection();
 				$this->dbTable = "eventband";
-				$sql = "SELECT ". self::$eid .",". self::$bid ." FROM `".$this->dbTable."` WHERE ". self::$eid ." = ? AND ". self::$bid ." = ?";
+				$sql = "SELECT ". self::$event .",". self::$band ." FROM `".$this->dbTable."` WHERE ". self::$event ." = ? AND ". self::$band ." = ?";
 				$params = array($eventdropdown,$banddropdown);
 
 				$query = $db -> prepare($sql);
@@ -122,7 +123,7 @@
 				
 
 				
-				if ($result['eid'] !== null && $result['bid'] !== null ) {
+				if ($result['event'] !== null && $result['band'] !== null ) {
 
 					throw new Exception("Spelning innehåller redan det bandet du försöker lägga till");
 
@@ -202,6 +203,97 @@
 
 		}
 
+		public function fetchAllEventWithBands(){
+
+
+				$db = $this -> connection();
+				$this->dbTable = "eventband";
+				$sql = "SELECT * FROM `$this->dbTable`";
+				
+
+				$query = $db -> prepare($sql);
+				$query -> execute();
+
+				$result = $query -> fetchall();
+				$eventbands = new EventBandList();
+				foreach ($result as $eventbanddb) {
+					$eventband = new EventBand($eventbanddb['event'], $eventbanddb['id']);
+					$eventbands->add($eventband);
+
+				}
+				return $eventbands;
+
+
+
+
+		}
+
+		public function fetchAllBandsWithEvent(){
+
+				$db = $this -> connection();
+				$this->dbTable = "eventband";
+				$sql = "SELECT * FROM `$this->dbTable`";
+				
+
+				$query = $db -> prepare($sql);
+				$query -> execute();
+
+				$result = $query -> fetchall();
+				$eventbands = new EventBandList();
+				foreach ($result as $eventbanddb) {
+					$eventband = new EventBand($eventbanddb['band'], $eventbanddb['id']);
+					$eventbands->add($eventband);
+
+				}
+				return $eventbands;
+
+
+		}
+
+		public function fetchChosenBandsInEventDropdown($eventdropdown)
+		{
+				$db = $this -> connection();
+				$this->dbTable = "eventband";
+				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$id ." = ?";
+				$params = array($eventdropdown);
+				
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetchall();
+				$eventbands = new EventBandList();
+				foreach ($result as $eventbanddb) {
+					$eventband = new EventBand($eventbanddb['band'], $eventbanddb['id']);
+					$eventbands->add($eventband);
+
+				}
+				return $eventbands;
+
+		}
+
+		public function fetchChosenEventInEventDropDown($eventdropdown)
+		{
+				$db = $this -> connection();
+				$this->dbTable = "eventband";
+				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$id ." = ?";
+				$params = array($eventdropdown);
+				
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetchall();
+				$eventbands = new EventBandList();
+				foreach ($result as $eventbanddb) {
+					$eventband = new EventBand($eventbanddb['event'], $eventbanddb['id']);
+					$eventbands->add($eventband);
+
+				}
+				return $eventbands;
+
+		}
+
 		public function fetchAllGrades()
 		{
 
@@ -253,7 +345,7 @@
 					$db = $this -> connection();
 					$this->dbTable = "eventband";
 
-					$sql = "INSERT INTO $this->dbTable (".self::$eid.",". self::$bid .") VALUES (?,?)";
+					$sql = "INSERT INTO $this->dbTable (".self::$event.",". self::$band .") VALUES (?,?)";
 					$params = array($eventdropdown,$banddropdown);
 
 					$query = $db -> prepare($sql);

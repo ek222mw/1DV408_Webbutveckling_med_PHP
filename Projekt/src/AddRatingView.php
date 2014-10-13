@@ -31,7 +31,26 @@
 
 		}
 
-		public function ShowAddRatingPage(EventList $eventlist, BandList $bandlist, GradeList $gradelist){
+		public function didUserPressChooseGradeEvent()
+		{
+			if(isset($_POST['chooseeventbutton']))
+			{
+				return true;
+			}
+			return false;
+			
+		}
+
+		public function didUserPressChooseOtherGradeEvent()
+		{
+			if(isset($_POST['chooseothereventbutton']))
+			{
+				return true;
+			}
+			return false;
+		}
+
+		public function ShowAddRatingPage(EventBandList $eventbandlist, EventBandList $bandeventlist, GradeList $gradelist){
 
 			
 
@@ -55,16 +74,82 @@
 							$this->message
 							Plats:
 							 <select name='dropdownpickevent'>";
-							 foreach($eventlist->toArray() as $event)
+							 foreach($eventbandlist->toArray() as $event)
 							 {
 							 	$contentString.= "<option value='". $event->getID()."'>".$event->getName()."</option>";
 							 }
 							 
 							 $contentString .= "</select>
-							 <br>
+							 Välj Event: <input type='submit' name='chooseeventbutton'  value='Välj Event'><br>
 							Band:
 							<select name='dropdownpickband'>";
-							 foreach($bandlist->toArray() as $band)
+							 foreach($bandeventlist->toArray() as $band)
+							 {
+							 	$contentString.= "<option value='". $band->getID()."'>".$band->getName()."</option>";
+							 }
+							 
+							 $contentString .= "</select><br>
+							 Betyg:
+							<select name='dropdownpickgrade'>";
+							 foreach($gradelist->toArray() as $grade)
+							 {
+							 	$contentString.= "<option value='". $grade->getID()."'>".$grade->getGrade()."</option>";
+							 }
+							 
+							 $contentString .= "</select><br>
+							
+						</fieldset>
+					</form>";
+
+					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
+					{
+    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
+					}
+
+					$HTMLbody = "
+				<h1>Lägg till betyg till vald spelning med band</h1>
+				<p><a href='?login'>Tillbaka</a></p>
+				$contentString<br>
+				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+
+				$this->echoHTML($HTMLbody);
+			
+			}
+
+			public function ShowChosenEventRatingPage(EventBandList $eventbandlist, EventBandList $bandeventlist, GradeList $gradelist){
+
+			
+
+			// Variabler
+			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
+			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
+			$year = strftime("%Y");
+			$time = strftime("%H:%M:%S");
+			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
+			
+			
+
+
+			// visa Lägga till event och band sidan.
+				
+					$contentString = 
+					 "
+					<form method=post >
+						<fieldset>
+							<legend>Lägga till nytt betyg till spelning med följande band</legend>
+							$this->message
+							Plats:
+							 <select name='dropdownpickevent'>";
+							 foreach($eventbandlist->toArray() as $event)
+							 {
+							 	$contentString.= "<option value='". $event->getID()."'>".$event->getName()."</option>";
+							 }
+							 
+							 $contentString .= "</select>
+							 Välj Annat Event: <input type='submit' name='chooseothereventbutton'  value='Välj Annat Event'><br>
+							Band:
+							<select name='dropdownpickband'>";
+							 foreach($bandeventlist->toArray() as $band)
 							 {
 							 	$contentString.= "<option value='". $band->getID()."'>".$band->getName()."</option>";
 							 }

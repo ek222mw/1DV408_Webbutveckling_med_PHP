@@ -40,6 +40,8 @@
 
 		}
 
+		
+
 		public function didUserPressAddBandToEventButton()
 		{
 				if(isset($_POST['createbandeventbutton']))
@@ -190,7 +192,7 @@
 							 <select name='dropdownpickevent'>";
 							 foreach($eventlist->toArray() as $event)
 							 {
-							 	$contentString.= "<option value='". $event->getID()."'>".$event->getName()."</option>";
+							 	$contentString.= "<option value='". $event->getName()."'>".$event->getName()."</option>";
 							 }
 							 
 							 $contentString .= "</select>
@@ -199,7 +201,7 @@
 							<select name='dropdownpickband'>";
 							 foreach($bandlist->toArray() as $band)
 							 {
-							 	$contentString.= "<option value='". $band->getID()."'>".$band->getName()."</option>";
+							 	$contentString.= "<option value='". $band->getName()."'>".$band->getName()."</option>";
 							 }
 							 
 							 $contentString .= "</select><br>

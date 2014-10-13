@@ -51,6 +51,7 @@
 
 				try{
 
+					
 					if($this->addratingview->didUserPressAddGradeButton())
 					{
 						if($this->db->checkIfGradeExistOnEventBandUser($eventdropdownvalue,$banddropdownvalue,$loggedinUser))
@@ -60,6 +61,7 @@
 						}
 
 					}
+				
 
 				}
 				catch(Exception $e)
@@ -78,11 +80,29 @@
 
 		public function doHTMLBody()
 		{
-				$events = $this->db->fetchAllEvents();
-				$bands = $this->db->fetchAllBands();
+				
+				$events = $this->db->fetchAllEventWithBands();
+				$bands = $this->db->fetchAllBandsWithEvent();
 				$grades = $this->db->fetchAllGrades();
 
-				$this->addratingview->ShowAddRatingPage($events,$bands,$grades);
+				if(!$this->addratingview->didUserPressChooseGradeEvent() && !$this->addratingview->didUserPressChooseOtherGradeEvent()) 
+				{
+					$this->addratingview->ShowAddRatingPage($events,$bands,$grades);
+				}
+
+				if($this->addratingview->didUserPressChooseGradeEvent() && !$this->addratingview->didUserPressChooseOtherGradeEvent())
+				{
+					$eventdropdownvalue = $this->addeventview->pickedEventDropdownValue();
+					
+					$chosenband = $this->db->fetchChosenBandsInEventDropdown($eventdropdownvalue);
+					$chosenevent = $this->db->fetchChosenEventInEventDropDown($eventdropdownvalue);
+
+					$this->addratingview->ShowChosenEventRatingPage($chosenevent,$chosenband,$grades);
+				}
+				if($this->addratingview->didUserPressChooseOtherGradeEvent())
+				{
+					$this->addratingview->ShowAddRatingPage($events,$bands,$grades);
+				}
 		
 		}
 
