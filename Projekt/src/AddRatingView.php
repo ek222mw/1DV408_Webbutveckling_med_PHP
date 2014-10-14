@@ -206,11 +206,9 @@
 							
 							 foreach($showeventlist->toArray() as $event)
 							 {
+							 	
 							 	$contentString .= "
-								<fieldset>
-								";
-							 	$contentString .= "
-								<br>Event:
+								<fieldset><br>Event:
 								";
 							 	$contentString.= "<p>".$event->getEvent()."</p>";
 							 	$contentString .= "
@@ -222,8 +220,10 @@
 								";
 								$contentString.= "<p>".$event->getGrade()."</p>";
 								$contentString .= "
-							
-						</fieldset><br>";
+							 	<br>Användare:
+								";
+								$contentString.= "<p>".$event->getUser()."</p>";
+								$contentString .= "</fieldset><br>";
 							 }
 							 
 							 $contentString .= "</form>";

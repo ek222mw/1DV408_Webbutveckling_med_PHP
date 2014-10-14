@@ -1,6 +1,7 @@
 <?php 
 
 	require_once("DBDetails.php");
+	require_once("ShowEventList.php");
 
 	class AddRatingModel{
 
@@ -12,6 +13,7 @@
 				$this->db = new DBDetails();
 			}
 
+		
 
 
 

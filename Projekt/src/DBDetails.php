@@ -150,7 +150,7 @@
 								
 
 				
-				if ($result['eid'] !== null && $result['bid'] !== null && $result['username'] !== null ) {
+				if ($result['event'] !== null && $result['band'] !== null && $result['username'] !== null ) {
 
 					throw new Exception("Spelningen med det bandet och användarnamn har redan ett betyg");
 
@@ -330,13 +330,38 @@
 				$query -> execute();
 
 				$result = $query -> fetchall();
+				
+				
 				$showevents = new ShowEventList();
 				foreach ($result as $showeventdb) {
-					$showevent = new ShowEvent($showeventdb['band'], $showeventdb['id'], $showeventdb['event'], $showeventdb['grade']);
+					$showevent = new ShowEvent($showeventdb['band'], $showeventdb['id'], $showeventdb['event'], $showeventdb['grade'],$showeventdb['username']);
 					$showevents->add($showevent);
 
 				}
 				return $showevents;
+		}
+
+		public function fetchEditGrades($loggedinUser)
+		{
+				$db = $this -> connection();
+				$this->dbTable = "summarygrade";
+				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$username ." = ? ";
+				$params = array($loggedinUser);
+				
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetchall();
+				
+				
+				$editgrades = new GradeList();
+				foreach ($result as $editgradedb) {
+					$editgrade = new Grade($editgradedb['grade'], $editgradedb['id'], $editgradedb['event'], $editgradedb['band'],$editgradedb['username']);
+					$editgrades->add($editgrade);
+
+				}
+				return $editgrades;
 		}
 
 

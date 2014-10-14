@@ -1,5 +1,5 @@
-<?php
-
+<?php 
+	
 	require_once("LoginModel.php");
 	require_once("LoginView.php");
 	require_once("AddBandEventModel.php");
@@ -7,8 +7,9 @@
 	require_once("AddRatingView.php");
 	require_once("AddRatingModel.php");
 	require_once("DBDetails.php");
+	require_once("EditRatingView.php");
 
-	class ShowEventController{
+	class EditRatingController{
 
 		private $loginview;
 		private $loginmodel;
@@ -17,9 +18,10 @@
 		private $addratingview;
 		private $addratingmodel;
 		private $db;
+		private $editratingview;
 
 		public function __construct(){
-
+			
 			// Sparar ner användarens användaragent och ip. Används vid verifiering av användaren.
 			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 						
@@ -31,6 +33,7 @@
 			$this->addratingview = new AddRatingView($this->loginmodel);
 			$this->addratingmodel = new AddRatingModel();
 			$this->db = new DBDetails();
+			$this->editratingview = new EditRatingView();
 
 
 			$this->doControll();
@@ -38,31 +41,20 @@
 
 		public function doControll()
 		{
-			if($this->loginview->didUserPressShowAllEvents() && $this->loginmodel->checkLoginStatus())
+			if($this->loginview->didUserPressEditGrades() && $this->loginmodel->checkLoginStatus())
 			{
-				try
-				{
-					$loggedinUser = $this->loginmodel->getLoggedInUser();
-					$showEvents = $this->db->fetchShowAllEvents();
-					//$this->addratingmodel->makeAverageGrade($showEvents, $loggedinUser);
 
-				}
-				catch(Exception $e)
-				{
-					$this->addratingview->showMessage($e->getMessage());
-				}
 			}
+
 			$this->doHTMLBody();
-
-
-
 		}
 
 		public function doHTMLBody()
 		{
-			$showEvents = $this->db->fetchShowAllEvents();
+			$loggedinUser = $this->loginmodel->getLoggedInUser();
+			$loggedinUserwithdetails = $this->db->fetchEditGrades($loggedinUser);
 
-			$this->addratingview->ShowAllEventsWithBandGrades($showEvents);
+			$this->editratingview->ShowEditRatingPage($loggedinUserwithdetails);
 
 		}
 

@@ -7,6 +7,7 @@
 	require_once("LoginView.php");
 	require_once("AddRatingController.php");
 	require_once("ShowEventController.php");
+	require_once("EditRatingController.php");
 	
 	
 	class NavigationController{
@@ -21,7 +22,7 @@
 
 			
 			if(!$this->view->didUserPressAddEvent() && !$this->view->didUserPressAddRating() && !$this->view->didUserPressAddBandToEvent() && !$this->view->didUserPressAddBand() && 
-				!$this->view->didUserPressShowAllEvents())
+				!$this->view->didUserPressShowAllEvents() && !$this->view->didUserPressEditGrades())
 			{
 				$loginC = new LoginController();
 				$htmlBodyLogin = $loginC->doHTMLBody();
@@ -41,6 +42,11 @@
 			if($this->view->didUserPressShowAllEvents() && $this->model->checkLoginStatus())
 			{
 				$ShowEventsC = new ShowEventController();
+			}
+
+			if($this->view->didUserPressEditGrades() && $this->model->checkLoginStatus())
+			{	
+				$EditGradesC = new EditRatingController();
 			}
 
 			

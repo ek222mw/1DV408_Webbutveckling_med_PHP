@@ -48,6 +48,11 @@ require_once 'common/HTMLView.php';
 			return isset($_GET['showevents']);
 		}
 
+		public function didUserPressEditGrades()
+		{
+			return isset($_GET['editrating']);
+		}
+
 
 
 		public function didUserPressCreateUser(){
@@ -164,6 +169,7 @@ require_once 'common/HTMLView.php';
 				<p><a href='?addband'>Lägg till band</a></p>
 				<p><a href='?addbandtoevent'>Lägg till band till spelning</a></p>
 				<p><a href='?addrating'>Lägg till betyg till spelning med angivet band</a></p>
+				<p><a href='?editrating'>Editera betyg till spelning med angivet band</a></p>
 				<p><a href='?showevents'>Visa spelningar med band samt betyg</a></p>
 				$contentString
 				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
