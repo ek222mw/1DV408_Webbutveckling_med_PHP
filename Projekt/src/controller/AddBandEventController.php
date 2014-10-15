@@ -1,11 +1,11 @@
 <?php
 
-	require_once("src/LoginModel.php");
-	require_once("src/LoginView.php");
-	require_once("src/AddBandEventModel.php");
-	require_once("src/AddBandEventView.php");
-	require_once("Event.php");
-	require_once("EventList.php");
+	require_once("./src/model/LoginModel.php");
+	require_once("./src/view/LoginView.php");
+	require_once("./src/model/AddBandEventModel.php");
+	require_once("./src/view/AddBandEventView.php");
+	require_once("./src/model/Event.php");
+	require_once("./src/model/EventList.php");
 
 	class AddBandEventController{
 

@@ -5,6 +5,8 @@
 	require_once("GradeList.php");
 	require_once("EventBandList.php");
 	require_once("ShowEventList.php");
+	require_once("EditGradeList.php");
+	require_once("DeleteGradeList.php");
 
 	class DBDetails{
 
@@ -34,22 +36,7 @@
 			return $this->dbConnection;
 			}
 
-			public function addEvent($inputevent) {
-				try {
-					$db = $this -> connection();
-					$this->dbTable = "event";
-
-					$sql = "INSERT INTO $this->dbTable (".self::$event.") VALUES (?)";
-					$params = array($inputevent);
-
-					$query = $db -> prepare($sql);
-					$query -> execute($params);
-					
-
-				} catch (\PDOException $e) {
-					die('An unknown error have occured.');
-				}
-			}
+			
 
 		public function checkIfEventExist($inputevent)
 		{
@@ -159,6 +146,30 @@
 					return true;
 				}
 
+		}
+
+		public function checkIfIdManipulated($pickedid, $loggedinUser)
+		{
+				$db = $this -> connection();
+				$this->dbTable = "summarygrade";
+				$sql = "SELECT ". self::$id .",". self::$username ." FROM `".$this->dbTable."` WHERE ". self::$id ." = ? AND ". self::$username ." = ? ";
+				$params = array($pickedid,$loggedinUser);
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetch();
+								
+
+				
+				if ($result['id'] == null && $result['username'] == null ) {
+
+					throw new Exception("Id till det betyget har inte rätt användarnamn");
+
+				}else{
+
+					return true;
+				}
 		}
 
 		public function fetchAllEvents()
@@ -355,13 +366,60 @@
 				$result = $query -> fetchall();
 				
 				
-				$editgrades = new GradeList();
+				$editgrades = new EditGradeList();
 				foreach ($result as $editgradedb) {
-					$editgrade = new Grade($editgradedb['grade'], $editgradedb['id'], $editgradedb['event'], $editgradedb['band'],$editgradedb['username']);
+					$editgrade = new EditGrade($editgradedb['grade'], $editgradedb['id'], $editgradedb['event'], $editgradedb['band'],$editgradedb['username']);
 					$editgrades->add($editgrade);
 
 				}
 				return $editgrades;
+		}
+
+		public function fetchIdPickedEditGrades($pickedid)
+		{
+				$db = $this -> connection();
+				$this->dbTable = "summarygrade";
+				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$id ." = ? ";
+				$params = array($pickedid);
+				
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetchall();
+				
+				
+				$editgrades = new EditGradeList();
+				foreach ($result as $editgradedb) {
+					$editgrade = new EditGrade($editgradedb['grade'], $editgradedb['id'], $editgradedb['event'], $editgradedb['band'],$editgradedb['username']);
+					$editgrades->add($editgrade);
+
+				}
+				return $editgrades;
+		}
+
+
+		public function fetchDeleteGradesWithSpecUser($loggedinUser)
+		{
+				$db = $this -> connection();
+				$this->dbTable = "summarygrade";
+				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$username ." = ? ";
+				$params = array($loggedinUser);
+				
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetchall();
+				
+				
+				$deletegrades = new DeleteGradeList();
+				foreach ($result as $deletegradedb) {
+					$deletegrade = new DeleteGrade($deletegradedb['grade'], $deletegradedb['id'], $deletegradedb['event'], $deletegradedb['band'],$deletegradedb['username']);
+					$deletegrades->add($deletegrade);
+
+				}
+				return $deletegrades;
 		}
 
 
@@ -426,6 +484,57 @@
 				} catch (\PDOException $e) {
 					die('An unknown error have occured.');
 				}
+
+		}
+
+		public function addEvent($inputevent) {
+				try {
+					$db = $this -> connection();
+					$this->dbTable = "event";
+
+					$sql = "INSERT INTO $this->dbTable (".self::$event.") VALUES (?)";
+					$params = array($inputevent);
+
+					$query = $db -> prepare($sql);
+					$query -> execute($params);
+					
+
+				} catch (\PDOException $e) {
+					die('An unknown error have occured.');
+				}
+		}
+
+		public function EditGrades($inputgrade,$inputid)
+		{
+			try{
+				
+			$db = $this -> connection();
+			$this->dbTable = "summarygrade";
+			$sql = "UPDATE $this->dbTable SET ". self::$grade ."=? WHERE ". self::$id ."=?";
+			$params = array($inputgrade,$inputid);
+
+			$query = $db -> prepare($sql);
+			$query -> execute($params);
+					
+
+			} catch (\PDOException $e) {
+					die('An unknown error have occured.');
+			}
+        
+		}
+
+		public function DeleteGrades($inputid)
+		{
+
+			$db = $this -> connection();
+			$this->dbTable = "summarygrade";
+
+			$sql = "DELETE FROM $this->dbTable WHERE ". self::$id ." = ?";
+			$params = array($inputid);
+
+			$query = $db -> prepare($sql);
+			$query -> execute($params);
+
 
 		}
 

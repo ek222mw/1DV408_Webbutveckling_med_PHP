@@ -1,13 +1,13 @@
 <?php
 
 
-	require_once("LoginModel.php");
-	require_once("LoginView.php");
-	require_once("AddBandEventModel.php");
-	require_once("AddBandEventView.php");
-	require_once("AddRatingView.php");
-	require_once("AddRatingModel.php");
-	require_once("DBDetails.php");
+	require_once("./src/model/LoginModel.php");
+	require_once("./src/view/LoginView.php");
+	require_once("./src/model/AddBandEventModel.php");
+	require_once("./src/view/AddBandEventView.php");
+	require_once("./src/view/AddRatingView.php");
+	require_once("./src/model/AddRatingModel.php");
+	require_once("./src/model/DBDetails.php");
 
 	class AddRatingController{
 

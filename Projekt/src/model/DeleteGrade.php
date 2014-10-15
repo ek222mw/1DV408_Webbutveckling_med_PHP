@@ -1,7 +1,8 @@
 <?php
 
 
-	class Grade{
+
+	class DeleteGrade{
 
 		private $m_grade;
 		private $m_id;
@@ -43,5 +44,5 @@
 
 			return $this->m_user;
 		}
-
+	
 	}

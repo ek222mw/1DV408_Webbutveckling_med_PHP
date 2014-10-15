@@ -3,11 +3,12 @@
 	require_once("./common/HTMLView.php");
 	require_once("LoginController.php");
 	require_once("AddBandEventController.php");
-	require_once("LoginModel.php");
-	require_once("LoginView.php");
+	require_once("./src/model/LoginModel.php");
+	require_once("./src/view/LoginView.php");
 	require_once("AddRatingController.php");
 	require_once("ShowEventController.php");
 	require_once("EditRatingController.php");
+	require_once("DeleteRatingController.php");
 	
 	
 	class NavigationController{
@@ -22,7 +23,7 @@
 
 			
 			if(!$this->view->didUserPressAddEvent() && !$this->view->didUserPressAddRating() && !$this->view->didUserPressAddBandToEvent() && !$this->view->didUserPressAddBand() && 
-				!$this->view->didUserPressShowAllEvents() && !$this->view->didUserPressEditGrades())
+				!$this->view->didUserPressShowAllEvents() && !$this->view->didUserPressEditGrades() && !$this->view->didUserPressDeleteGrade())
 			{
 				$loginC = new LoginController();
 				$htmlBodyLogin = $loginC->doHTMLBody();
@@ -46,8 +47,15 @@
 
 			if($this->view->didUserPressEditGrades() && $this->model->checkLoginStatus())
 			{	
-				$EditGradesC = new EditRatingController();
+				$EditRatingC = new EditRatingController();
 			}
+
+			if($this->view->didUserPressDeleteGrade() && $this->model->checkLoginStatus())
+			{
+				$DeleteRatingC = new DeleteRatingController();
+			}
+
+
 
 			
 		}

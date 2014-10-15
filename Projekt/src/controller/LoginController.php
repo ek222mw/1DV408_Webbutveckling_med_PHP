@@ -1,7 +1,7 @@
 <?php
 	
-	require_once("src/LoginModel.php");
-	require_once("src/LoginView.php");
+	require_once("./src/model/LoginModel.php");
+	require_once("./src/view/LoginView.php");
 	
 	class LoginController
 	{

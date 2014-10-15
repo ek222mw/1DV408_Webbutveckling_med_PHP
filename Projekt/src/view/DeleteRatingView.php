@@ -2,10 +2,9 @@
 
 	require_once 'common/HTMLView.php';
 
-	class EditRatingView extends HTMLView {
+	class DeleteRatingView extends HTMLView {
 
 
-		
 		private $message = "";
 
 		public function __construct(){
@@ -13,7 +12,27 @@
 				
 		}
 
-		public function ShowEditRatingPage(GradeList $gradelist)
+
+		public function didUserPressDeleteGradeButton()
+		{
+			if(isset($_POST['deletegradebutton']))
+			{
+				return true;
+			}
+			return false;
+		}
+
+		public function getDeletePickedValue()
+		{
+			if(isset($_POST['pickeddeleteid']))
+			{
+				return $_POST['pickeddeleteid'];
+			}
+			return false;
+		}
+
+
+		public function ShowDeleteRatingPage(DeleteGradeList $deletegradelist)
 		{
 			// Variabler
 			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
@@ -29,25 +48,26 @@
 				
 					$contentString = 
 					 "
-					<form method=post >
-						
-							<legend>Editera betyg</legend><br>";
+					
+							$this->message";
 							
-							 foreach($gradelist->toArray() as $grade)
+							 foreach($deletegradelist->toArray() as $grade)
 							 {
-							 	
+							 	$contentString .=  "<form method=post >";
 							 	$contentString .= "
-								<fieldset><br>Event";
+								<fieldset><legend>Ta bort betyg</legend><br>Event";
 							 	$contentString.= "<p>".$grade->getEvent()."</p>";
 							 	$contentString .= "Band";
 							 	$contentString.="<p>".$grade->getBand()."</p>";
 							 	$contentString .= "Betyg:";
 							 	$contentString.= "<p>".$grade->getGrade()."</p>"; 
-							 	$contentString.= "<button type='button' name='pickedid' value='". $grade->getID() ."'>Editera betyg </button>";
+							 	$contentString.= "<input type='hidden' name='pickeddeleteid' value='". $grade->getID() ."'>";
+							 	$contentString.= "<input type='submit' name='deletegradebutton' value='Ta bort betyg'>";
 							 	$contentString .= "</fieldset><br>";
+							 	$contentString .= "</form>";
 							 }
 							 
-							 $contentString .= "</form>";
+							 
 
 					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
 					{
@@ -55,7 +75,7 @@
 					}
 
 					$HTMLbody = "
-				<h1>Editera betyg till vald spelning med band</h1>
+				<h1>Ta bort betyg till vald spelning med band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
 				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
@@ -63,6 +83,15 @@
 				$this->echoHTML($HTMLbody);
 		}
 
+		public function showMessage($message)
+		{
+			$this->message = "<p>" . $message . "</p>";
+		}
+
+		public function successfulDeleteGradeToEventWithBand()
+		{
+				$this->showMessage("Betyget har tagits bort!");
+		}
 
 
 	}
