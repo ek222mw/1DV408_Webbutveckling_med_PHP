@@ -1,38 +1,48 @@
 <?php
 
-	require_once 'common/HTMLView.php';
+	require_once("common/HTMLView.php");
+	require_once("TimeDate.php");
 
 	class AddBandEventView extends HTMLView{
 
-		private $loginmodel;
+		private $timedate;
 		private $message = "";
 
-		public function __construct(LoginModel $model){
+		private $createevent = "createevent";
+		private $createband = "createband";
+		private $createeventbutton = "createeventbutton";
+		private $createbandeventbutton = "createbandeventbutton";
+		private $createbandbutton = "createbandbutton";
+		private $dropdownpickevent = "dropdownpickevent";
+		private $dropdownpickband = "dropdownpickband";
 
-				$this->loginmodel = $model;
+		public function __construct(){
+
+			$this->timedate = new TimeDate();
+				
 		}
 
 		public function getEventName(){
 
-			if(isset($_POST['createevent']))
+			if(isset($_POST[$this->createevent]))
 			{
-				return $_POST['createevent'];
+				return $_POST[$this->createevent];
 			}
 			return false;
 		}
 
 		public function getBandName(){
 
-			if(isset($_POST['createband']))
+			if(isset($_POST[$this->createband]))
 			{
-				return $_POST['createband'];
+				return $_POST[$this->createband];
 			}
 			return false;
 		}
 
 		public function didUserPressAddEventButton(){
 
-			if(isset($_POST['createeventbutton']))
+			if(isset($_POST[$this->createeventbutton]))
 			{
 				return true;
 			}
@@ -44,7 +54,7 @@
 
 		public function didUserPressAddBandToEventButton()
 		{
-				if(isset($_POST['createbandeventbutton']))
+				if(isset($_POST[$this->createbandeventbutton]))
 				{
 					return true;
 				}
@@ -55,7 +65,7 @@
 		public function didUserPressAddBandButton()
 		{
 
-			if(isset($_POST['createbandbutton']))
+			if(isset($_POST[$this->createbandbutton]))
 			{
 				return true;
 			}
@@ -65,18 +75,18 @@
 
 		public function pickedEventDropdownValue(){
 
-			if(isset($_POST['dropdownpickevent']))
+			if(isset($_POST[$this->dropdownpickevent]))
 			{
-				return $_POST['dropdownpickevent'];
+				return $_POST[$this->dropdownpickevent];
 			}
 			return false;
 		}
 
 		public function pickedBandDropdownValue(){
 
-			if(isset($_POST['dropdownpickband']))
+			if(isset($_POST[$this->dropdownpickband]))
 			{
-				return $_POST['dropdownpickband'];
+				return $_POST[$this->dropdownpickband];
 			}
 			return false;
 
@@ -85,12 +95,7 @@
 
 		public function ShowAddEventPage(){
 
-			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
+			$timedate = $this->timedate->TimeAndDate();
 			
 			
 
@@ -108,16 +113,11 @@
 						</fieldset>
 					</form>";
 
-					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-					{
-    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-					}
-
 					$HTMLbody = "
 				<h1>Skapa nytt band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 
 				$this->echoHTML($HTMLbody);
 			}
@@ -125,17 +125,12 @@
 
 			public function ShowAddBandPage(){
 
-				// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
 			
 			
+			$timedate = $this->timedate->TimeAndDate();
 
 
-			// visa Lägga till event sidan.
+			// visa Lägga till band sidan.
 				
 					$contentString = 
 					 "
@@ -148,16 +143,11 @@
 						</fieldset>
 					</form>";
 
-					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-					{
-    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-					}
-
 					$HTMLbody = "
 				<h1>Skapa nytt Band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 
 				$this->echoHTML($HTMLbody);
 
@@ -170,15 +160,8 @@
 
 			public function ShowAddBandToEventPage(EventList $eventlist, BandList $bandlist){
 
-			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
 			
-			
-
+			$timedate = $this->timedate->TimeAndDate();
 
 			// visa Lägga till event och band sidan.
 				
@@ -209,16 +192,11 @@
 						</fieldset>
 					</form>";
 
-					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-					{
-    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-					}
-
 					$HTMLbody = "
 				<h1>Lägg till band till vald spelning</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 
 				$this->echoHTML($HTMLbody);
 			}

@@ -1,21 +1,26 @@
 <?php
 
-	require_once 'common/HTMLView.php';
+	require_once("common/HTMLView.php");
+	require_once("TimeDate.php");
 
 	class DeleteRatingView extends HTMLView {
 
-
+		private $timedate;
 		private $message = "";
+
+		private $deletegradebutton = "deletegradebutton";
+		private $pickeddeleteid = "pickeddeleteid";
+
 
 		public function __construct(){
 
-				
+				$this->timedate = new TimeDate();
 		}
 
 
 		public function didUserPressDeleteGradeButton()
 		{
-			if(isset($_POST['deletegradebutton']))
+			if(isset($_POST[$this->deletegradebutton]))
 			{
 				return true;
 			}
@@ -24,9 +29,9 @@
 
 		public function getDeletePickedValue()
 		{
-			if(isset($_POST['pickeddeleteid']))
+			if(isset($_POST[$this->pickeddeleteid]))
 			{
-				return $_POST['pickeddeleteid'];
+				return $_POST[$this->pickeddeleteid];
 			}
 			return false;
 		}
@@ -34,17 +39,10 @@
 
 		public function ShowDeleteRatingPage(DeleteGradeList $deletegradelist)
 		{
-			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
 			
-			
+			$timedate = $this->timedate->TimeAndDate();
 
-
-			// visa Lägga till event och band sidan.
+			// visa ta bort betyg sidan.
 				
 					$contentString = 
 					 "
@@ -66,19 +64,12 @@
 							 	$contentString .= "</fieldset><br>";
 							 	$contentString .= "</form>";
 							 }
-							 
-							 
-
-					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-					{
-    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-					}
-
+	
 					$HTMLbody = "
 				<h1>Ta bort betyg till vald spelning med band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate. ".";
 
 				$this->echoHTML($HTMLbody);
 		}

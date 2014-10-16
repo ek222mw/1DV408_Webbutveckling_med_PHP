@@ -1,31 +1,41 @@
 <?php
 
-	require_once 'common/HTMLView.php';
+	require_once("common/HTMLView.php");
+	require_once("TimeDate.php");
 	
 	class AddRatingView extends HTMLView {
 
-		private $loginmodel;
+		
 		private $message = "";
+		private $timedate;
 
-		public function __construct(LoginModel $model){
+		private $creategradebutton = "creategradebutton";
+		private $dropdownpickgrade = "dropdownpickgrade";
+		private $chooseeventbutton = "chooseeventbutton";
+		private $chooseothereventbutton = "chooseothereventbutton";
 
-				$this->loginmodel = $model;
+		public function __construct(){
+
+				
+				$this->timedate = new TimeDate();
 		}
 
 		public function didUserPressAddGradeButton(){
 
-			if(isset($_POST['creategradebutton']))
+			if(isset($_POST[$this->creategradebutton]))
 			{
 				return true;
 			}
 			return false;
 		}
 
+		
+
 		public function pickedGradeDropdownValue(){
 
-			if(isset($_POST['dropdownpickgrade']))
+			if(isset($_POST[$this->dropdownpickgrade]))
 			{
-				return $_POST['dropdownpickgrade'];
+				return $_POST[$this->dropdownpickgrade];
 			}
 			return false;
 
@@ -33,7 +43,7 @@
 
 		public function didUserPressChooseGradeEvent()
 		{
-			if(isset($_POST['chooseeventbutton']))
+			if(isset($_POST[$this->chooseeventbutton]))
 			{
 				return true;
 			}
@@ -43,26 +53,16 @@
 
 		public function didUserPressChooseOtherGradeEvent()
 		{
-			if(isset($_POST['chooseothereventbutton']))
+			if(isset($_POST[$this->chooseothereventbutton]))
 			{
 				return true;
 			}
 			return false;
 		}
 
-		public function ShowAddRatingPage(EventBandList $eventbandlist, EventBandList $bandeventlist, GradeList $gradelist){
+		public function ShowAddRatingPage(EventBandList $eventbandlist){
 
-			
-
-			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
-			
-			
-
+			$timedate = $this->timedate->TimeAndDate();
 
 			// visa Lägga till event och band sidan.
 				
@@ -72,45 +72,25 @@
 						<fieldset>
 							<legend>Lägga till nytt betyg till spelning med följande band</legend>
 							$this->message
-							Plats:
+							Event:
 							 <select name='dropdownpickevent'>";
 							 foreach($eventbandlist->toArray() as $event)
 							 {
 							 	$contentString.= "<option value='". $event->getName()."'>".$event->getName()."</option>";
 							 }
 							 
-							 $contentString .= "</select>
-							 Välj Event: <input type='submit' name='chooseeventbutton'  value='Välj Event'><br>
-							Band:
-							<select name='dropdownpickband'>";
-							 foreach($bandeventlist->toArray() as $band)
-							 {
-							 	$contentString.= "<option value='". $band->getName()."'>".$band->getName()."</option>";
-							 }
-							 
-							 $contentString .= "</select><br>
-							 Betyg:
-							<select name='dropdownpickgrade'>";
-							 foreach($gradelist->toArray() as $grade)
-							 {
-							 	$contentString.= "<option value='". $grade->getGrade()."'>".$grade->getGrade()."</option>";
-							 }
-							 
-							 $contentString .= "</select><br>
+							 $contentString .= "</select><input type='submit' name='chooseeventbutton'  value='Välj Event'>";
 							
+							 
+							 $contentString .= "
 						</fieldset>
 					</form>";
-
-					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-					{
-    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-					}
 
 					$HTMLbody = "
 				<h1>Lägg till betyg till vald spelning med band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 
 				$this->echoHTML($HTMLbody);
 			
@@ -119,26 +99,16 @@
 			public function ShowChosenEventRatingPage(EventBandList $eventbandlist, EventBandList $bandeventlist, GradeList $gradelist){
 
 			
-
-			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
-			
-			
-
-
 			// visa Lägga till event och band sidan.
-				
+				$timedate = $this->timedate->TimeAndDate();
+
 					$contentString = 
 					 "
 					<form method=post >
 						<fieldset>
 							<legend>Lägga till nytt betyg till spelning med följande band</legend>
 							$this->message
-							Plats:
+							Event:
 							 <select name='dropdownpickevent'>";
 							 foreach($eventbandlist->toArray() as $event)
 							 {
@@ -146,7 +116,7 @@
 							 }
 							 
 							 $contentString .= "</select>
-							 Välj Annat Event: <input type='submit' name='chooseothereventbutton'  value='Välj Annat Event'><br>
+							<input type='submit' name='chooseothereventbutton'  value='Välj Annat Event'><br>
 							Band:
 							<select name='dropdownpickband'>";
 							 foreach($bandeventlist->toArray() as $band)
@@ -167,16 +137,11 @@
 						</fieldset>
 					</form>";
 
-					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-					{
-    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-					}
-
 					$HTMLbody = "
 				<h1>Lägg till betyg till vald spelning med band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 
 				$this->echoHTML($HTMLbody);
 			
@@ -186,14 +151,9 @@
 			public function ShowAllEventsWithBandGrades(ShowEventList $showeventlist)
 			{
 
-					// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
 			
 			
+			$timedate = $this->timedate->TimeAndDate();
 
 
 			// visa Lägga till event och band sidan.
@@ -228,16 +188,13 @@
 							 
 							 $contentString .= "</form>";
 
-					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-					{
-    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-					}
+					
 
 					$HTMLbody = "
 				<h1>Visar alla events med band och betyg</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 
 				$this->echoHTML($HTMLbody);
 

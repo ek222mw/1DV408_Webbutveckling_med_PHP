@@ -1,21 +1,30 @@
 <?php
 
-	require_once 'common/HTMLView.php';
+	require_once("common/HTMLView.php");
+	require_once("TimeDate.php");
 
 	class EditRatingView extends HTMLView {
 
 
-		
+		private $timedate;
 		private $message = "";
+
+		private $editbutton = "editbutton";
+		private $pickededitid = "pickededitid";
+		private $pickedid = "pickedid";
+		private $dropdownneweditgrade = "dropdownneweditgrade";
+		private $editgradebutton = "editgradebutton";
+
+
 
 		public function __construct(){
 
-				
+				$this->timedate = new TimeDate();
 		}
 
 		public function didUserPressEditPickedButton()
 		{
-			if(isset($_POST['editbutton']))
+			if(isset($_POST[$this->editbutton]))
 			{
 				return true;
 			}
@@ -24,18 +33,18 @@
 
 		public function getEditPickedButtonValue()
 		{
-			if(isset($_POST['pickededitid']))
+			if(isset($_POST[$this->pickededitid]))
 			{
-				return $_POST['pickededitid'];
+				return $_POST[$this->pickededitid];
 			}
 			return false;
 		}
 
 		public function getEditPickedButtonValueSaved()
 		{
-			if(isset($_POST['pickedid']))
+			if(isset($_POST[$this->pickedid]))
 			{
-				return $_POST['pickedid'];
+				return $_POST[$this->pickedid];
 			}
 			return false;
 		}
@@ -44,16 +53,16 @@
 
 		public function getDropdownPickedEditGrade()
 		{
-			if(isset($_POST['dropdownneweditgrade']))
+			if(isset($_POST[$this->dropdownneweditgrade]))
 			{
-				return $_POST['dropdownneweditgrade'];
+				return $_POST[$this->dropdownneweditgrade];
 			}
 			return false;
 		}
 
 		public function didUserPressEditGradeButton()
 		{
-			if(isset($_POST['editgradebutton']))
+			if(isset($_POST[$this->editgradebutton]))
 			{
 				return true;
 			}
@@ -63,25 +72,15 @@
 
 		public function ShowEditRatingPage(EditGradeList $gradelist)
 		{
-			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
-			
+
+
+			$timedate = $this->timedate->TimeAndDate();
 			
 
 
-			// visa Lägga till event och band sidan.
+			// visa Editera betyg sidan.
 				
-					$contentString = 
-					 "
-					
-						
-							
-							$this->message";
-							
+					$contentString = "$this->message";
 							 foreach($gradelist->toArray() as $grade)
 							 {
 							 	$contentString .=  "<form method=post >";
@@ -98,18 +97,12 @@
 							 	$contentString .= "</form>";
 							 }
 							 
-							 
-
-					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-					{
-    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-					}
 
 					$HTMLbody = "
 				<h1>Editera betyg till vald spelning med band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 
 				$this->echoHTML($HTMLbody);
 		}
@@ -117,17 +110,11 @@
 
 		public function ShowChosenEditRatingPage(EditGradeList $editgradelist, GradeList $gradelist)
 		{
-			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
 			
 			
+			$timedate = $this->timedate->TimeAndDate();
 
-
-			// visa Lägga till event och band sidan.
+			// visa editerings sidan med valt betyg att ändra.
 				
 					$contentString = 
 					 "
@@ -164,16 +151,11 @@
 							 $contentString .= "</fieldset><br>";
 							 $contentString .= "</form>";
 
-					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-					{
-    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-					}
-
 					$HTMLbody = "
 				<h1>Editera betyg till vald spelning med band</h1>
 				<p><a href='?editrating'>Tillbaka</a></p>
 				$contentString<br>
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 
 				$this->echoHTML($HTMLbody);
 		}

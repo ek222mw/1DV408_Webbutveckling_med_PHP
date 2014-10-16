@@ -29,8 +29,8 @@
 			$this->loginmodel = new LoginModel($userAgent);
 			$this->loginview = new LoginView($this->loginmodel);
 			$this->addeventmodel = new AddBandEventModel();
-			$this->addeventview = new AddBandEventView($this->loginmodel);
-			$this->addratingview = new AddRatingView($this->loginmodel);
+			$this->addeventview = new AddBandEventView();
+			$this->addratingview = new AddRatingView();
 			$this->addratingmodel = new AddRatingModel();
 			$this->db = new DBDetails();
 
@@ -87,7 +87,7 @@
 
 				if(!$this->addratingview->didUserPressChooseGradeEvent() && !$this->addratingview->didUserPressChooseOtherGradeEvent()) 
 				{
-					$this->addratingview->ShowAddRatingPage($events,$bands,$grades);
+					$this->addratingview->ShowAddRatingPage($events);
 				}
 
 				if($this->addratingview->didUserPressChooseGradeEvent() && !$this->addratingview->didUserPressChooseOtherGradeEvent())
@@ -101,7 +101,7 @@
 				}
 				if($this->addratingview->didUserPressChooseOtherGradeEvent())
 				{
-					$this->addratingview->ShowAddRatingPage($events,$bands,$grades);
+					$this->addratingview->ShowAddRatingPage($events);
 				}
 		
 		}

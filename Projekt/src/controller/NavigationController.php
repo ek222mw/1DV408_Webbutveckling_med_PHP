@@ -29,11 +29,13 @@
 				$htmlBodyLogin = $loginC->doHTMLBody();
 			}
 
+
 			if(($this->view->didUserPressAddEvent() || $this->view->didUserPressAddBandToEvent() || $this->view->didUserPressAddBand()) && $this->model->checkLoginStatus())
 			{
 				$AddEventBandC = new AddBandEventController();
 				
 			}
+
 
 			if($this->view->didUserPressAddRating() && $this->model->checkLoginStatus())
 			{

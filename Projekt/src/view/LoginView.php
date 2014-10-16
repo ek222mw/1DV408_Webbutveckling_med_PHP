@@ -1,21 +1,36 @@
 <?php
 
-require_once 'common/HTMLView.php';
+	require_once("common/HTMLView.php");
+	require_once("TimeDate.php");
 
 	class LoginView extends HTMLView
 	{
 		private $model;
 		private $loginStatus = "";
 		private $username = "username";
-		
 		private $password = "password";
-		
 		private $checkbox = "checkbox";
 		private $message = "";
+		private $timedate;
+
+		private $logout = "logout";
+		private $register = "register";
+		private $addevent = "addevent";
+		private $showevents = "showevents";
+		private $editrating = "editrating";
+		private $createuserbutton = "createuserbutton";
+		private $createusername = "createusername";
+		private $createpassword = "createpassword";
+		private $repeatpassword = "repeatpassword";
+		private $addrating = "addrating";
+		private $addbandtoevent = "addbandtoevent";
+		private $addband = "addband";
+		private $deleterating = "deleterating";
 		
 		public function __construct(LoginModel $model)
 		{
 			$this->model = $model;
+			$this->timedate = new TimeDate();
 		}
 		
 		// Kontrollerar ifall användarnamnet är lagrat i POST-arrayen.
@@ -27,37 +42,37 @@ require_once 'common/HTMLView.php';
 		// Kontrollerar ifall URL:en innehåller logout.
 		public function didUserPressLogout()
 		{
-			return isset($_GET['logout']);
+			return isset($_GET[$this->logout]);
 		}
 
 		public function didUserPressRegister()
 		{
 			 
-			return isset($_GET['register']);
+			return isset($_GET[$this->register]);
 			
 		}
 
 		public function didUserPressAddEvent()
 		{
 
-			return isset($_GET['addevent']);
+			return isset($_GET[$this->addevent]);
 		}
 
 		public function didUserPressShowAllEvents()
 		{
-			return isset($_GET['showevents']);
+			return isset($_GET[$this->showevents]);
 		}
 
 		public function didUserPressEditGrades()
 		{
-			return isset($_GET['editrating']);
+			return isset($_GET[$this->editrating]);
 		}
 
 
 
 		public function didUserPressCreateUser(){
 
-			if(isset($_POST['createuserbutton']))
+			if(isset($_POST[$this->createuserbutton]))
 			{
 				return true;
 			}
@@ -66,27 +81,27 @@ require_once 'common/HTMLView.php';
 
 		public function getRegisterUsername(){
 
-			if(isset($_POST['createusername']))
+			if(isset($_POST[$this->createusername]))
 			{
-				return $_POST['createusername'];
+				return $_POST[$this->createusername];
 			}
 			return false;
 		}
 
 		public function getRegisterPassword(){
 
-			if(isset($_POST['createpassword']))
+			if(isset($_POST[$this->createpassword]))
 			{
-				return $_POST['createpassword'];
+				return $_POST[$this->createpassword];
 			}
 			return false;
 		}
 
 		public function getRepeatRegisterPassword(){
 
-			if(isset($_POST['repeatpassword']))
+			if(isset($_POST[$this->repeatpassword]))
 			{
-				return $_POST['repeatpassword'];
+				return $_POST[$this->repeatpassword];
 			}
 			return false;
 		}
@@ -95,35 +110,31 @@ require_once 'common/HTMLView.php';
 		public function didUserPressAddRating()
 		{
 
-			return isset($_GET['addrating']);
+			return isset($_GET[$this->addrating]);
 		}
 
 		public function didUserPressAddBandToEvent()
 		{
-			return isset($_GET['addbandtoevent']);
+			return isset($_GET[$this->addbandtoevent]);
 		}
 
 		public function didUserPressAddBand()
 		{
 
-			return isset($_GET['addband']);
+			return isset($_GET[$this->addband]);
 		}
 
 		public function didUserPressDeleteGrade()
 		{
-			return isset($_GET['deleterating']);
+			return isset($_GET[$this->deleterating]);
 		}
 		
 		// Sätter body-innehållet.
 		public function showLoginPage()
 		{
-			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
 			
+			$timedate = $this->timedate->TimeAndDate();
+
 			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
 			if($this->model->checkLoginStatus())
 			{				
@@ -153,32 +164,28 @@ require_once 'common/HTMLView.php';
 				
 			}
 			
-			// Kontrollerar ifall windowsformatet används och ersätter %e med en fungerande del.
-			if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-			{
-    			$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-			}
 			
 			$HTMLbody = "
 				
 				<h2>$this->loginStatus</h2>
 				<p><a href='?register'>Registrera ny användare</a></p>
 				$contentString
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 			if($this->model->checkLoginStatus())
 			{
 			$HTMLbody = "
-				
 				<h2>$this->loginStatus</h2>
-				<p><a href='?addevent'>Lägg till spelning</a></p>
+				$contentString<br>
+				<h2>Meny</h2>
+				<p><a href='?addevent'>Lägg till event</a></p>
 				<p><a href='?addband'>Lägg till band</a></p>
-				<p><a href='?addbandtoevent'>Lägg till band till spelning</a></p>
-				<p><a href='?addrating'>Lägg till betyg till spelning med angivet band</a></p>
-				<p><a href='?editrating'>Editera betyg till spelning med angivet band</a></p>
-				<p><a href='?deleterating'>Ta bort betyg till spelning med angivet band</a></p>
-				<p><a href='?showevents'>Visa spelningar med band samt betyg</a></p>
-				$contentString
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				<p><a href='?addbandtoevent'>Lägg till band till event</a></p>
+				<p><a href='?addrating'>Lägg till betyg till event med angivet band</a></p>
+				<p><a href='?editrating'>Editera betyg till event med angivet band</a></p>
+				<p><a href='?deleterating'>Ta bort betyg till event med angivet band</a></p>
+				<p><a href='?showevents'>Visa events med band samt betyg</a></p>
+				
+				" . $timedate . ".";
 			}
 
 			$this->echoHTML($HTMLbody);
@@ -187,12 +194,8 @@ require_once 'common/HTMLView.php';
 
 		public function showLoginPageWithRegname()
 		{
-			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
+			
+			$timedate = $this->timedate->TimeAndDate();
 			
 			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
 			if($this->model->checkLoginStatus())
@@ -223,30 +226,19 @@ require_once 'common/HTMLView.php';
 				
 			}
 			
-			// Kontrollerar ifall windowsformatet används och ersätter %e med en fungerande del.
-			if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-			{
-    			$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-			}
-			
 			$HTMLbody = "
 				
 				<h2>$this->loginStatus</h2>
 				<p><a href='?register'>Registrera ny användare</a></p>
 				$contentString
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 			
 			$this->echoHTML($HTMLbody);
 		}
 
 		public function showRegisterPage(){
 
-			// Variabler
-			$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
-			$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
-			$year = strftime("%Y");
-			$time = strftime("%H:%M:%S");
-			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
+			$timedate = $this->timedate->TimeAndDate();
 			
 			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
 			if($this->model->checkLoginStatus())
@@ -259,13 +251,7 @@ require_once 'common/HTMLView.php';
 				$this->loginStatus = $this->model->getLoggedInUser() . " är inloggad";
 			}else{
 
-
-
-
-
-			// visa registreringssidan.
-				
-					 
+					// visa registreringssidan.
 					$this->loginStatus = "Ej inloggad, Registrerar användare";
 					$contentString = 
 					 "
@@ -273,17 +259,12 @@ require_once 'common/HTMLView.php';
 						<fieldset>
 							<legend>Registrera ny användare - Skriv in användarnamn och lösenord</legend>
 							$this->message
-							Namn: <input type='text' name='createusername' value='". strip_tags($_POST['createusername']) ."'><br>
-							Lösenord: <input type='password' name='createpassword'><br>
-							Repetera Lösenord: <input type='password' name='repeatpassword'><br>
-							Skicka: <input type='submit' name='createuserbutton'  value='Registrera'>
+							Namn: <input type='text' name='$this->createusername' value='". strip_tags($_POST[$this->createusername]) ."'><br>
+							Lösenord: <input type='password' name='$this->createpassword'><br>
+							Repetera Lösenord: <input type='password' name='$this->repeatpassword'><br>
+							Skicka: <input type='submit' name='$this->createuserbutton'  value='Registrera'>
 						</fieldset>
 					</form>";
-
-					if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
-					{
-    					$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
-					}
 
 					$HTMLbody = "
 				
@@ -293,7 +274,7 @@ require_once 'common/HTMLView.php';
 				<h2>$this->loginStatus</h2>
 				
 				$contentString<br>
-				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
+				" . $timedate . ".";
 
 				$this->echoHTML($HTMLbody);
 			}
