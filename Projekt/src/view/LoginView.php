@@ -12,6 +12,7 @@
 		private $checkbox = "checkbox";
 		private $message = "";
 		private $timedate;
+		private $welcomemessage = "";
 
 		private $logout = "logout";
 		private $register = "register";
@@ -149,15 +150,20 @@
 				
 				
 					// ...annars visas inloggningssidan.
+					$this->welcomemessage = "<h1 id='h1welcome'>Välkommen till Music-Live Review</h1>
+					<h2 id='h2welcome'>Logga in för att se menyn. Utan konto? Registrera dig och logga in.</h2>
+					<div id='divwelcome'>Musik Live Review handlar om att sätta betyg på livespelningar med band, det är ett lätt att se på vilken livespelning som ett band presterar bäst.
+					När du loggat in kan du lägga till livespelningar,band och koppla band till livespelningar. Du kan även Lägga till, editera och ta bort betyg pålivespelningar med band.</div>";
 					$this->loginStatus = "Ej inloggad";
+
 					$contentString = 
 					"<form id='loginForm' method=post action='?login'>
 						<fieldset>
-							<legend>Login - Skriv in användarnamn och lösenord</legend>
+							<legend id='legendgradient'>Login - Skriv in användarnamn och lösenord</legend>
 							$this->message
-							Namn: <input type='text' name='$this->username' value='" . $this->getInputUsername() . "'>
-							Lösenord: <input type='password' name='$this->password'> 
-							<input type='checkbox' name='$this->checkbox' value='checked'>Håll mig inloggad:
+							<span id='spangradient' style='white-space: nowrap'>Namn:</span> <input type='text' name='$this->username' value='" . $this->getInputUsername() . "'>
+							<span id='spangradient' style='white-space: nowrap'>Lösenord:</span> <input type='password' name='$this->password'><br> 
+							<span id='spangradient' style='white-space: nowrap'>Håll mig inloggad:</span><input type='checkbox' name='$this->checkbox' value='checked'><br><br>
 							<button type='submit' name='button' form='loginForm' value='Submit'>Logga in</button>
 						</fieldset>
 					</form>";
@@ -166,14 +172,16 @@
 			
 			
 			$HTMLbody = "
-				
-				<h2>$this->loginStatus</h2>
+				<div id='divlogin'>
+				$this->welcomemessage
+				<div id='form'>
+				<div id='loginstatus'>$this->loginStatus</div>
 				<p><a href='?register'>Registrera ny användare</a></p>
 				$contentString
-				" . $timedate . ".";
+				" . $timedate . ".</div></div>";
 			if($this->model->checkLoginStatus())
 			{
-			$HTMLbody = "
+			$HTMLbody = "<div id='divmenu'>
 				<h2>$this->loginStatus</h2>
 				$contentString<br>
 				<h2>Meny</h2>
@@ -185,7 +193,7 @@
 				<p><a href='?deleterating'>Ta bort betyg till event med angivet band</a></p>
 				<p><a href='?showevents'>Visa events med band samt betyg</a></p>
 				
-				" . $timedate . ".";
+				" . $timedate . ".</div>";
 			}
 
 			$this->echoHTML($HTMLbody);
@@ -217,8 +225,8 @@
 						<fieldset>
 							<legend>Login - Skriv in användarnamn och lösenord</legend>
 							$this->message
-							Namn: <input type='text' name='$this->username' value='" . $this->getRegisterUsername() . "'>
-							Lösenord: <input type='password' name='$this->password'> 
+							<span style='white-space: nowrap'>Namn:</span> <input type='text' name='$this->username' value='" . $this->getRegisterUsername() . "'>
+							<span style='white-space: nowrap'>Lösenord:</span> <input type='password' name='$this->password'> 
 							<input type='checkbox' name='$this->checkbox' value='checked'>Håll mig inloggad:
 							<button type='submit' name='button' form='loginForm' value='Submit'>Logga in</button>
 						</fieldset>
@@ -226,12 +234,11 @@
 				
 			}
 			
-			$HTMLbody = "
-				
+			$HTMLbody = "<div id='divlogin'>
 				<h2>$this->loginStatus</h2>
 				<p><a href='?register'>Registrera ny användare</a></p>
 				$contentString
-				" . $timedate . ".";
+				" . $timedate . ".</div>";
 			
 			$this->echoHTML($HTMLbody);
 		}
@@ -256,25 +263,21 @@
 					$contentString = 
 					 "
 					<form method=post >
-						<fieldset>
+						<fieldset id='fieldregister'>
 							<legend>Registrera ny användare - Skriv in användarnamn och lösenord</legend>
 							$this->message
-							Namn: <input type='text' name='$this->createusername' value='". strip_tags($_POST[$this->createusername]) ."'><br>
-							Lösenord: <input type='password' name='$this->createpassword'><br>
-							Repetera Lösenord: <input type='password' name='$this->repeatpassword'><br>
-							Skicka: <input type='submit' name='$this->createuserbutton'  value='Registrera'>
+							<span style='white-space: nowrap'>Namn:</span><br> <input type='text' name='$this->createusername' value='". strip_tags($_POST[$this->createusername]) ."'><br>
+							<span style='white-space: nowrap'>Lösenord:</span><br> <input type='password' name='$this->createpassword'><br>
+							<span style='white-space: nowrap'>Repetera Lösenord:</span><br> <input type='password' name='$this->repeatpassword'><br>
+							<span style='white-space: nowrap'>Skicka:</span> <input type='submit' name='$this->createuserbutton'  value='Registrera'>
 						</fieldset>
 					</form>";
 
-					$HTMLbody = "
-				
-				
+					$HTMLbody = "<div id='divregister'>
 				<p><a href='?login'>Tillbaka</a></p>
-				
 				<h2>$this->loginStatus</h2>
-				
 				$contentString<br>
-				" . $timedate . ".";
+				" . $timedate . ".</div>";
 
 				$this->echoHTML($HTMLbody);
 			}
@@ -331,9 +334,9 @@
 		// Sparar angivet användarnamn i textfältet.
 		public function getInputUsername()
 		{
-			if(isset($_POST['username']))
+			if(isset($_POST[$this->username]))
 			{
-				return $_POST['username'];
+				return $_POST[$this->username];
 			}
 			
 			// Är inte användarnamnet satt skickas en tomsträng med.

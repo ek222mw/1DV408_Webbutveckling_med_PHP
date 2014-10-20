@@ -74,7 +74,7 @@
 		{
 
 
-			$timedate = $this->timedate->TimeAndDate();
+			
 			
 
 
@@ -85,24 +85,25 @@
 							 {
 							 	$contentString .=  "<form method=post >";
 							 	$contentString .= "
-								<fieldset><legend>Editera betyg</legend><br>Event";
-							 	$contentString.= "<p>".$grade->getEvent()."</p>";
-							 	$contentString .= "Band";
-							 	$contentString.="<p>".$grade->getBand()."</p>";
-							 	$contentString .= "Betyg:";
-							 	$contentString.= "<p>".$grade->getGrade()."</p>"; 
-							 	$contentString.= "<input type='hidden' name='pickededitid' value='". $grade->getID() ."'>";
-							 	$contentString.= "<input type='submit' name='editbutton' value='Editera'>";
-							 	$contentString .= "</fieldset><br>";
+								<fieldset id='fieldeditrating'><legend>Editera betyg</legend><br>
+								<span id='spangradient' style='white-space: nowrap'>LiveSpelning:</span>";
+							 	$contentString.= "<p id='pgradient'>".$grade->getEvent()."</p>";
+							 	$contentString .= "<span id='spangradient' style='white-space: nowrap'>Band:</span>";
+							 	$contentString.="<p id='pgradient'>".$grade->getBand()."</p>";
+							 	$contentString .= "<span id='spangradient' style='white-space: nowrap'>Betyg:</span>";
+							 	$contentString.= "<p id='pgradient'>".$grade->getGrade()."</p>"; 
+							 	$contentString.= "<input type='hidden' name='$this->pickededitid' value='". $grade->getID() ."'>";
+							 	$contentString.= "<input type='submit' name='$this->editbutton' value='Editera'>";
+							 	$contentString .= "</fieldset>";
 							 	$contentString .= "</form>";
 							 }
 							 
 
-					$HTMLbody = "
+					$HTMLbody = "<div id='diveditrating'>
 				<h1>Editera betyg till vald spelning med band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . $timedate . ".";
+				</div>";
 
 				$this->echoHTML($HTMLbody);
 		}
@@ -126,18 +127,19 @@
 							 {
 							 	
 							 	$contentString .= "
-								<fieldset><br>Event";
-							 	$contentString.= "<p>".$editgrade->getEvent()."</p>";
-							 	$contentString .= "Band";
-							 	$contentString.="<p>".$editgrade->getBand()."</p>";
-							 	$contentString .= "Betyg";
-							 	$contentString.="<p>".$editgrade->getGrade()."</p>";
-							 	$contentString.= "<input type='hidden' name='pickedid' value='". $editgrade->getID() ."'>";
+								<fieldset id='fieldchoseneditrating'><br><span id='spangradient' style='white-space: nowrap'>
+								LiveSpelning</span>";
+							 	$contentString.= "<p id='pgradient'>".$editgrade->getEvent()."</p>";
+							 	$contentString .= "<span id='spangradient' style='white-space: nowrap'>Band:</span>";
+							 	$contentString.="<p id='pgradient'>".$editgrade->getBand()."</p>";
+							 	$contentString .= "<span id='spangradient' style='white-space: nowrap'>Betyg:</span>";
+							 	$contentString.="<p id='pgradient'>".$editgrade->getGrade()."</p>";
+							 	$contentString.= "<input type='hidden' name='$this->pickedid' value='". $editgrade->getID() ."'>";
 							 	
 							 	
 							 	
 							 }
-							 $contentString .= "Nytt betyg<br>";
+							 $contentString .= "<span id='spangradient' style='white-space: nowrap'>Nytt betyg:</span><br>";
 							 $contentString.= "<select name='dropdownneweditgrade'>";
 							 foreach($gradelist->toArray() as $grade)
 							 {
@@ -147,15 +149,15 @@
 							 }
 							 $contentString.="</select>";
 
-							 $contentString.= "<input type='submit' name='editgradebutton'  value='Editera Betyg'>";
-							 $contentString .= "</fieldset><br>";
+							 $contentString.= "<input type='submit' name='$this->editgradebutton'  value='Editera Betyg'>";
+							 $contentString .= "</fieldset>";
 							 $contentString .= "</form>";
 
-					$HTMLbody = "
+					$HTMLbody = "<div id='divchoseneditrating'>
 				<h1>Editera betyg till vald spelning med band</h1>
 				<p><a href='?editrating'>Tillbaka</a></p>
-				$contentString<br>
-				" . $timedate . ".";
+				$contentString
+				</div>";
 
 				$this->echoHTML($HTMLbody);
 		}

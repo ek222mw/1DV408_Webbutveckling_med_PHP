@@ -105,19 +105,19 @@
 					$contentString = 
 					 "
 					<form method=post >
-						<fieldset>
-							<legend>Lägga till ny spelning - Skriv in plats och band</legend>
+						<fieldset id='fieldaddevent'>
+							<legend>Lägga till ny livespelning - Skriv in ny livespelning</legend>
 							$this->message
-							Plats: <input type='text' name='createevent'><br>
-							Skicka: <input type='submit' name='createeventbutton'  value='Skapa'>
+							<span style='white-space: nowrap'>Livespelning:</span> <input type='text' name='$this->createevent'><br>
+							<span style='white-space: nowrap'>Skicka:</span> <input type='submit' name='$this->createeventbutton'  value='Skapa'>
 						</fieldset>
 					</form>";
 
-					$HTMLbody = "
+					$HTMLbody = "<div id='divaddevent'>
 				<h1>Skapa nytt band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . $timedate . ".";
+				" . $timedate . ".</div>";
 
 				$this->echoHTML($HTMLbody);
 			}
@@ -135,19 +135,19 @@
 					$contentString = 
 					 "
 					<form method=post >
-						<fieldset>
+						<fieldset id='fieldaddband'>
 							<legend>Lägga till nytt band - Skriv in band</legend>
 							$this->message
-							Band: <input type='text' name='createband'><br>
-							Skicka: <input type='submit' name='createbandbutton'  value='Skapa'>
+							<span style='white-space: nowrap'>Band:</span><input type='text' name='$this->createband'><br>
+							<span style='white-space: nowrap'>Skicka:</span> <input type='submit' name='$this->createbandbutton'  value='Skapa'>
 						</fieldset>
 					</form>";
 
-					$HTMLbody = "
+					$HTMLbody = "<div id='divaddband'>
 				<h1>Skapa nytt Band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . $timedate . ".";
+				" . $timedate . ".</div>";
 
 				$this->echoHTML($HTMLbody);
 
@@ -168,11 +168,11 @@
 					$contentString = 
 					 "
 					<form method=post >
-						<fieldset>
+						<fieldset id='fieldaddbandevent'>
 							<legend>Lägga till nytt band till spelning</legend>
 							$this->message
-							Plats:
-							 <select name='dropdownpickevent'>";
+							<span style='white-space: nowrap'>Livespelning:</span><br>
+							 <select name='$this->dropdownpickevent'>";
 							 foreach($eventlist->toArray() as $event)
 							 {
 							 	$contentString.= "<option value='". $event->getName()."'>".$event->getName()."</option>";
@@ -180,23 +180,23 @@
 							 
 							 $contentString .= "</select>
 							 <br>
-							Band:
-							<select name='dropdownpickband'>";
+							<span style='white-space: nowrap'>Band:</span><br>
+							<select name='$this->dropdownpickband'>";
 							 foreach($bandlist->toArray() as $band)
 							 {
 							 	$contentString.= "<option value='". $band->getName()."'>".$band->getName()."</option>";
 							 }
 							 
-							 $contentString .= "</select><br>
-							Skicka: <input type='submit' name='createbandeventbutton'  value='Lägg till'>
+							 $contentString .= "</select><br><br>
+							<span style='white-space: nowrap'>Skicka:</span> <input type='submit' name='$this->createbandeventbutton'  value='Lägg till'>
 						</fieldset>
 					</form>";
 
-					$HTMLbody = "
+					$HTMLbody = "<div id='divaddbandevent'>
 				<h1>Lägg till band till vald spelning</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . $timedate . ".";
+				" . $timedate . ".</div>";
 
 				$this->echoHTML($HTMLbody);
 			}

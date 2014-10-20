@@ -53,23 +53,24 @@
 							 {
 							 	$contentString .=  "<form method=post >";
 							 	$contentString .= "
-								<fieldset><legend>Ta bort betyg</legend><br>Event";
-							 	$contentString.= "<p>".$grade->getEvent()."</p>";
-							 	$contentString .= "Band";
-							 	$contentString.="<p>".$grade->getBand()."</p>";
-							 	$contentString .= "Betyg:";
-							 	$contentString.= "<p>".$grade->getGrade()."</p>"; 
-							 	$contentString.= "<input type='hidden' name='pickeddeleteid' value='". $grade->getID() ."'>";
-							 	$contentString.= "<input type='submit' name='deletegradebutton' value='Ta bort betyg'>";
-							 	$contentString .= "</fieldset><br>";
+								<fieldset id='fielddeleterating'><legend>Ta bort betyg</legend><br><span id='spangradient' style='white-space: nowrap'>
+								Livespelning:</span>";
+							 	$contentString.= "<p id='pgradient'>".$grade->getEvent()."</p>";
+							 	$contentString .= "<span id='spangradient' style='white-space: nowrap'>Band:</span>";
+							 	$contentString.="<p id='pgradient'>".$grade->getBand()."</p>";
+							 	$contentString .= "<span id='spangradient' style='white-space: nowrap'>Betyg:</span>";
+							 	$contentString.= "<p id='pgradient'>".$grade->getGrade()."</p>"; 
+							 	$contentString.= "<input type='hidden' name='$this->pickeddeleteid' value='". $grade->getID() ."'>";
+							 	$contentString.= "<input type='submit' name='$this->deletegradebutton' value='Ta bort betyg'>";
+							 	$contentString .= "</fieldset>";
 							 	$contentString .= "</form>";
 							 }
 	
-					$HTMLbody = "
+					$HTMLbody = "<div id='divdeletegrade'>
 				<h1>Ta bort betyg till vald spelning med band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
-				$contentString<br>
-				" . $timedate. ".";
+				$contentString
+				</div>";
 
 				$this->echoHTML($HTMLbody);
 		}

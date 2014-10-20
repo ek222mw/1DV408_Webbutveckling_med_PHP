@@ -69,28 +69,28 @@
 					$contentString = 
 					 "
 					<form method=post >
-						<fieldset>
+						<fieldset id='fieldaddrating'>
 							<legend>Lägga till nytt betyg till spelning med följande band</legend>
 							$this->message
-							Event:
+							<span style='white-space: nowrap'>Event:</span>
 							 <select name='dropdownpickevent'>";
 							 foreach($eventbandlist->toArray() as $event)
 							 {
 							 	$contentString.= "<option value='". $event->getName()."'>".$event->getName()."</option>";
 							 }
 							 
-							 $contentString .= "</select><input type='submit' name='chooseeventbutton'  value='Välj Event'>";
+							 $contentString .= "</select><input type='submit' name='$this->chooseeventbutton'  value='Välj Event'>";
 							
 							 
 							 $contentString .= "
 						</fieldset>
 					</form>";
 
-					$HTMLbody = "
+					$HTMLbody = "<div id='divaddrating'>
 				<h1>Lägg till betyg till vald spelning med band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . $timedate . ".";
+				" . $timedate . ".</div>";
 
 				$this->echoHTML($HTMLbody);
 			
@@ -105,10 +105,10 @@
 					$contentString = 
 					 "
 					<form method=post >
-						<fieldset>
+						<fieldset id='fieldaddchosenrating'>
 							<legend>Lägga till nytt betyg till spelning med följande band</legend>
 							$this->message
-							Event:
+							<span style='white-space: nowrap'>Livespelning:</span><br>
 							 <select name='dropdownpickevent'>";
 							 foreach($eventbandlist->toArray() as $event)
 							 {
@@ -116,8 +116,8 @@
 							 }
 							 
 							 $contentString .= "</select>
-							<input type='submit' name='chooseothereventbutton'  value='Välj Annat Event'><br>
-							Band:
+							<input type='submit' name='$this->chooseothereventbutton'  value='Välj Annat Event'><br>
+							<span style='white-space: nowrap'>Band:</span><br>
 							<select name='dropdownpickband'>";
 							 foreach($bandeventlist->toArray() as $band)
 							 {
@@ -125,23 +125,23 @@
 							 }
 							 
 							 $contentString .= "</select><br>
-							 Betyg:
-							<select name='dropdownpickgrade'>";
+							 <span style='white-space: nowrap'>Betyg:</span><br>
+							<select name='$this->dropdownpickgrade'>";
 							 foreach($gradelist->toArray() as $grade)
 							 {
 							 	$contentString.= "<option value='". $grade->getGrade()."'>".$grade->getGrade()."</option>";
 							 }
 							 
 							 $contentString .= "</select><br>
-							Skicka: <input type='submit' name='creategradebutton'  value='Lägg till Betyg'>
+							Skicka: <input type='submit' name='$this->creategradebutton'  value='Lägg till Betyg'>
 						</fieldset>
 					</form>";
 
-					$HTMLbody = "
+					$HTMLbody = "<div id='divaddchosenrating'>
 				<h1>Lägg till betyg till vald spelning med band</h1>
 				<p><a href='?login'>Tillbaka</a></p>
 				$contentString<br>
-				" . $timedate . ".";
+				" . $timedate . ".</div>";
 
 				$this->echoHTML($HTMLbody);
 			
@@ -153,7 +153,7 @@
 
 			
 			
-			$timedate = $this->timedate->TimeAndDate();
+			
 
 
 			// visa Lägga till event och band sidan.
@@ -162,39 +162,39 @@
 					 "
 					<form method=post >
 						
-							<legend>Visar Alla event</legend><br>";
+							<h3>Visar Alla event</h3>";
 							
 							 foreach($showeventlist->toArray() as $event)
 							 {
 							 	
 							 	$contentString .= "
-								<fieldset><br>Event:
+								<fieldset id='fieldshowall'><span id='spangradient'  style='white-space: nowrap'>Livespelning:</span>
 								";
-							 	$contentString.= "<p>".$event->getEvent()."</p>";
+							 	$contentString.= "<p id='pgradient'>".$event->getEvent()."</p>";
 							 	$contentString .= "
-								<br>Band:
+								<span id='spangradient' style='white-space: nowrap'>Band:<span>
 								";
-							 	$contentString.= "<p>".$event->getBand()."</p>";
+							 	$contentString.= "<p id='pgradient'>".$event->getBand()."</p>";
 							 	$contentString .= "
-							 	<br>Betyg:
+							 	<span id='spangradient' style='white-space: nowrap'>Betyg:</span>
 								";
-								$contentString.= "<p>".$event->getGrade()."</p>";
+								$contentString.= "<p id='pgradient'>".$event->getGrade()."</p>";
 								$contentString .= "
-							 	<br>Användare:
+							 	<span id='spangradient' style='white-space: nowrap'>Användare:</span>
 								";
-								$contentString.= "<p>".$event->getUser()."</p>";
-								$contentString .= "</fieldset><br>";
+								$contentString.= "<p id='pgradient'>".$event->getUser()."</p>";
+								$contentString .= "</fieldset>";
 							 }
 							 
 							 $contentString .= "</form>";
 
 					
 
-					$HTMLbody = "
+					$HTMLbody = "<div id='divshowall'>
 				<h1>Visar alla events med band och betyg</h1>
 				<p><a href='?login'>Tillbaka</a></p>
-				$contentString<br>
-				" . $timedate . ".";
+				$contentString
+				</div>";
 
 				$this->echoHTML($HTMLbody);
 
