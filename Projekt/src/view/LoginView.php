@@ -19,6 +19,7 @@
 		private $addevent = "addevent";
 		private $showevents = "showevents";
 		private $editrating = "editrating";
+		private $login = "login";
 		private $createuserbutton = "createuserbutton";
 		private $createusername = "createusername";
 		private $createpassword = "createpassword";
@@ -78,7 +79,8 @@
 				return true;
 			}
 			return false;
-		}		
+		}
+
 
 		public function getRegisterUsername(){
 
@@ -107,6 +109,14 @@
 			return false;
 		}
 
+		public function getInputPassword()
+		{
+			if(isset($_POST[$this->password]))
+			{
+				return $_POST[$this->password];
+			}
+			return false;
+		}
 
 		public function didUserPressAddRating()
 		{
@@ -129,6 +139,8 @@
 		{
 			return isset($_GET[$this->deleterating]);
 		}
+
+		
 		
 		// Sätter body-innehållet.
 		public function showLoginPage()
@@ -185,13 +197,13 @@
 				<h2>$this->loginStatus</h2>
 				$contentString<br>
 				<h2>Meny</h2>
-				<p><a href='?addevent'>Lägg till event</a></p>
+				<p><a href='?addevent'>Lägg till livespelning</a></p>
 				<p><a href='?addband'>Lägg till band</a></p>
-				<p><a href='?addbandtoevent'>Lägg till band till event</a></p>
-				<p><a href='?addrating'>Lägg till betyg till event med angivet band</a></p>
-				<p><a href='?editrating'>Editera betyg till event med angivet band</a></p>
-				<p><a href='?deleterating'>Ta bort betyg till event med angivet band</a></p>
-				<p><a href='?showevents'>Visa events med band samt betyg</a></p>
+				<p><a href='?addbandtoevent'>Lägg till band till livespelning</a></p>
+				<p><a href='?addrating'>Lägg till betyg till livespelning med angivet band</a></p>
+				<p><a href='?editrating'>Editera betyg till livespelning med angivet band</a></p>
+				<p><a href='?deleterating'>Ta bort betyg till livespelning med angivet band</a></p>
+				<p><a href='?showevents'>Visa livespelningar med band samt betyg</a></p>
 				
 				" . $timedate . ".</div>";
 			}
@@ -216,17 +228,20 @@
 			}
 			else 
 			{
-				
+					$this->welcomemessage = "<h1 id='h1welcome'>Välkommen till Music-Live Review</h1>
+					<h2 id='h2welcome'>Logga in för att se menyn. Utan konto? Registrera dig och logga in.</h2>
+					<div id='divwelcome'>Musik Live Review handlar om att sätta betyg på livespelningar med band, det är ett lätt att se på vilken livespelning som ett band presterar bäst.
+					När du loggat in kan du lägga till livespelningar,band och koppla band till livespelningar. Du kan även Lägga till, editera och ta bort betyg pålivespelningar med band.</div>";
 				
 					// ...annars visas inloggningssidan.
 					$this->loginStatus = "Ej inloggad";
 					$contentString = 
 					"<form id='loginForm' method=post action='?login'>
 						<fieldset>
-							<legend>Login - Skriv in användarnamn och lösenord</legend>
+							<legend id='legendgradient'>Login - Skriv in användarnamn och lösenord</legend>
 							$this->message
-							<span style='white-space: nowrap'>Namn:</span> <input type='text' name='$this->username' value='" . $this->getRegisterUsername() . "'>
-							<span style='white-space: nowrap'>Lösenord:</span> <input type='password' name='$this->password'> 
+							<span id='spangradient' style='white-space: nowrap'>Namn:</span> <input type='text' name='$this->username' value='" . $this->getRegisterUsername() . "'>
+							<span id='spangradient' style='white-space: nowrap'>Lösenord:</span> <input type='password' name='$this->password'> 
 							<input type='checkbox' name='$this->checkbox' value='checked'>Håll mig inloggad:
 							<button type='submit' name='button' form='loginForm' value='Submit'>Logga in</button>
 						</fieldset>
@@ -235,10 +250,12 @@
 			}
 			
 			$HTMLbody = "<div id='divlogin'>
-				<h2>$this->loginStatus</h2>
+				$this->welcomemessage
+				<div id='form'>
+				<div id='loginstatus'>$this->loginStatus</div>
 				<p><a href='?register'>Registrera ny användare</a></p>
 				$contentString
-				" . $timedate . ".</div>";
+				" . $timedate . ".</div></div>";
 			
 			$this->echoHTML($HTMLbody);
 		}
@@ -316,7 +333,7 @@
 			$this->model->validateExpirationTime();
 			
 			// Validera kakornas innehåll.
-			$this->model->verifyUserInput($_COOKIE["Username"], $this->model->decodePassword($_COOKIE["Password"]), true);
+			$this->model->verifyUserInput($_COOKIE["Username"],$_COOKIE["Password"], true);
 			
 			// Visa rättmeddelande.
 			$this->showMessage("Inloggningen lyckades via cookies");

@@ -56,8 +56,14 @@
 					{
 						if($this->db->checkIfGradeExistOnEventBandUser($eventdropdownvalue,$banddropdownvalue,$loggedinUser))
 						{
-							$this->db->addGradeToEventBandWithUser($eventdropdownvalue,$banddropdownvalue,$gradedropdownvalue,$loggedinUser);
-							$this->addratingview->successfulAddGradeToEventWithBand();
+							if($this->db->checkIfBandAndEventManipulated($eventdropdownvalue,$banddropdownvalue))
+							{
+								if($this->db->checkIfPickRatingManipulated($gradedropdownvalue))
+								{
+									$this->db->addGradeToEventBandWithUser($eventdropdownvalue,$banddropdownvalue,$gradedropdownvalue,$loggedinUser);
+									$this->addratingview->successfulAddGradeToEventWithBand();
+								}
+							}
 						}
 
 					}
@@ -84,27 +90,39 @@
 				$events = $this->db->fetchAllEventWithBands();
 				$bands = $this->db->fetchAllBandsWithEvent();
 				$grades = $this->db->fetchAllGrades();
+				$eventdropdownvalue = $this->addeventview->pickedEventDropdownValue();
+				$chosenband = $this->db->fetchChosenBandsInEventDropdown($eventdropdownvalue);
+				$chosenevent = $this->db->fetchChosenEventInEventDropDown($eventdropdownvalue);
+				
 
-				if(!$this->addratingview->didUserPressChooseGradeEvent() && !$this->addratingview->didUserPressChooseOtherGradeEvent()) 
+				try
 				{
+					if(!$this->addratingview->didUserPressChooseGradeEvent() && !$this->addratingview->didUserPressChooseOtherGradeEvent()) 
+					{
+						
+							$this->addratingview->ShowAddRatingPage($events);
+						
+					}
+
+					if($this->addratingview->didUserPressChooseGradeEvent() && !$this->addratingview->didUserPressChooseOtherGradeEvent() && $this->db->checkIfPickEventManipulated($eventdropdownvalue))
+					{
+						
+						$this->addratingview->ShowChosenEventRatingPage($chosenevent,$chosenband,$grades);
+					}
+					if($this->addratingview->didUserPressChooseOtherGradeEvent())
+					{
+						$this->addratingview->ShowAddRatingPage($events);
+					}
+				}
+				catch(Exception $e)
+				{
+					$this->addratingview->showMessage($e->getMessage());
 					$this->addratingview->ShowAddRatingPage($events);
 				}
 
-				if($this->addratingview->didUserPressChooseGradeEvent() && !$this->addratingview->didUserPressChooseOtherGradeEvent())
-				{
-					$eventdropdownvalue = $this->addeventview->pickedEventDropdownValue();
-					
-					$chosenband = $this->db->fetchChosenBandsInEventDropdown($eventdropdownvalue);
-					$chosenevent = $this->db->fetchChosenEventInEventDropDown($eventdropdownvalue);
 
-					$this->addratingview->ShowChosenEventRatingPage($chosenevent,$chosenband,$grades);
-				}
-				if($this->addratingview->didUserPressChooseOtherGradeEvent())
-				{
-					$this->addratingview->ShowAddRatingPage($events);
-				}
 		
-		}
+			}
 
 
 

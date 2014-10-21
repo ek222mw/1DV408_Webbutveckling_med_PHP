@@ -46,14 +46,18 @@
 				$pickedid = $this->editratingview->getEditPickedButtonValueSaved();
 				$loggedinUser = $this->loginmodel->getLoggedInUser();
 				$neweditgrade = $this->editratingview->getDropdownPickedEditGrade();
+
 				try
 				{
 					if($this->editratingview->didUserPressEditGradeButton())
 					{
 						if($this->db->checkIfIdManipulated($pickedid,$loggedinUser))
 						{
-							$this->db->EditGrades($neweditgrade,$pickedid);
-							$this->editratingview->successfulEditGradeToEventWithBand();
+							if($this->db->checkIfPickRatingManipulated($neweditgrade))
+							{
+								$this->db->EditGrades($neweditgrade,$pickedid);
+								$this->editratingview->successfulEditGradeToEventWithBand();
+							}
 						}
 					}
 

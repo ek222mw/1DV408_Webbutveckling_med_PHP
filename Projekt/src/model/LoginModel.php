@@ -1,29 +1,28 @@
 <?php
+	require_once("DBDetails.php");
 
 	class LoginModel
 	{
-		private $correctUsername = "";
-		private $correctPassword = "";
+		
 		private $sessionUserAgent;
 		private $success = false;
-		
+		private $db;
+		private $loggedInUser = "loggedInUser";
+		private $loggedIn = "loggedIn";
 
-		protected $dbUsername = "root";
-		protected $dbPassword = "";
-		protected $dbConnstring = 'mysql:host=127.0.0.1;dbname=login';
-		protected $dbConnection;
-		protected $dbTable = "login";
+		
 		
 		public function __construct($userAgent)
 		{
 			// Sparar användarens useragent i den privata variablerna.
 			$this->sessionUserAgent = $userAgent;
+			$this->db = new DBDetails();
 		}
 		
 		// Kontrollerar loginstatusen. Är användaren inloggad returnerar metoden true, annars false.
 		public function checkLoginStatus()
 		{
-			if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === true && $_SESSION['sessionUserAgent'] === $this->sessionUserAgent)
+			if(isset($_SESSION[$this->loggedIn]) && $_SESSION[$this->loggedIn] === true && $_SESSION[$this->sessionUserAgent] === $this->sessionUserAgent)
 			{
 				return true;
 			}
@@ -80,70 +79,15 @@
 				return true;
 		}
 
-		
-			
-	
-		protected function connection() {
-			if ($this->dbConnection == NULL)
-				$this->dbConnection = new \PDO($this->dbConnstring, $this->dbUsername, $this->dbPassword);
-			
-			$this->dbConnection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-			
-			return $this->dbConnection;
-		}
 
-		
-	
-
-
-		public function add($inputuser,$inputpassword) {
-			try {
-				$db = $this -> connection();
-				
-				$sql = "INSERT INTO $this->dbTable (`username`,`password`) VALUES (?, ?)";
-				$params = array($inputuser, $inputpassword);
-
-				$query = $db -> prepare($sql);
-				$query -> execute($params);
-				$this->success = true;
-
-			} catch (\PDOException $e) {
-				die('An unknown error have occured.');
-			}
-		}
-
-		public function ReadSpecifik($inputuser)
+		public function addUsersetSuccess($registerUsername,$registerPassword)
 		{
-
-			
-			$db = $this -> connection();
-
-			$sql = "SELECT `username` FROM `$this->dbTable` WHERE `username` = ?";
-			$params = array($inputuser);
-
-			$query = $db -> prepare($sql);
-			$query -> execute($params);
-
-			$result = $query -> fetch();
-			
-			
-			if ($result['username'] !== null) {
-				
-				$this->UsernameExistInDB();
-
-			}else{
-				return true;
-			}
-			
-		
-		}
-
-		public function UsernameExistInDB(){
-		
-			
-				throw new Exception("Användarnamnet är redan upptaget");
-		}
-
+			$this->success = $this->db->addUser($registerUsername,$registerPassword);
+			  
+			 	
+			 
+		}	
+	
 		public function ValidateUsername($inputuser){
 			
 
@@ -165,16 +109,7 @@
 			return $this->loginsuccess;
 		}
 
-		public function encryptPassword($pw){
-
-			return base64_encode($pw);
-		}
-
-		public function decodePassword($pwcrypt){
-
-			return base64_decode($pwcrypt);
-		}
-
+		
 
 		
 		
@@ -182,48 +117,9 @@
 		public function verifyUserInput($inputUsername, $inputPassword, $isCookieLogin = false)
 		{
 
-
-
-			$db = $this -> connection();
-
-			$sql = "SELECT `username` FROM `$this->dbTable` WHERE `username` = ?";
-			$params = array($inputUsername);
-
-			$query = $db -> prepare($sql);
-			$query -> execute($params);
-
-			$result = $query -> fetch();
-			
-			
-			if ($result) {
+			$DB_Username = $this->db->verifyUserInput($inputUsername);
+			$DB_Password = $this->db->verifyPassInput($inputPassword);
 				
-				
-				$result['username'];
-				$DB_Username = $result['username'];
-
-			}
-
-
-			$db = $this -> connection();
-
-			$sql = "SELECT `password` FROM `$this->dbTable` WHERE `password` = ?";
-			$params = array($inputPassword);
-
-			$query = $db -> prepare($sql);
-			$query -> execute($params);
-
-			$result = $query -> fetch();
-			
-			
-			if ($result) {
-				
-				
-				$result['password'];
-				$DB_Password = $result['password'];
-				
-
-			}
-
 
 			if($inputUsername == "" || $inputUsername === NULL)
 			{
@@ -231,7 +127,7 @@
 				throw new Exception("Användarnamn saknas");
 			}
 			
-			if($inputPassword == "" || $inputPassword === NULL || $inputPassword === md5(""))
+			if($inputPassword == "" || $inputPassword === NULL || $inputPassword === crypt("","emile"))
 			{
 				// Kasta undantag.
 				throw new Exception("Lösenord saknas");
@@ -242,12 +138,12 @@
 			if($inputUsername == $DB_Username && $inputPassword == $DB_Password)
 			{
 				// Inloggningsstatus och användarnamn sparas i sessionen.
-				$_SESSION['loggedIn'] = true;
-				$_SESSION['loggedInUser'] = $inputUsername;
+				$_SESSION[$this->loggedIn] = true;
+				$_SESSION[$this->loggedInUser] = $inputUsername;
 				
 				
 				// Sparar useragent i sessionen.
-				$_SESSION['sessionUserAgent'] = $this->sessionUserAgent;
+				$_SESSION[$this->sessionUserAgent] = $this->sessionUserAgent;
 								
 				return true;
 			}
@@ -274,9 +170,9 @@
 		// Hämtar användarnamnet från sessionen.
 		public function getLoggedInUser()
 		{
-			if(isset($_SESSION['loggedInUser']))
+			if(isset($_SESSION[$this->loggedInUser]))
 			{
-				return $_SESSION['loggedInUser'];
+				return $_SESSION[$this->loggedInUser];
 			}
 		}
 		

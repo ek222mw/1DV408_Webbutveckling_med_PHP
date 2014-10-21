@@ -26,6 +26,7 @@
 			private static $eventband = "eventband";
 			private static $username = "username";
 			private static $password = "password";
+			private static $rating = "rating";
 
 			protected function connection() {
 			if ($this->dbConnection == NULL)
@@ -36,7 +37,79 @@
 			return $this->dbConnection;
 			}
 
+		
+
+		public function ReadSpecifik($inputuser)
+		{
+
 			
+			$db = $this -> connection();
+			$this->dbTable = "login";
+
+			$sql = "SELECT `username` FROM `$this->dbTable` WHERE `username` = ?";
+			$params = array($inputuser);
+
+			$query = $db -> prepare($sql);
+			$query -> execute($params);
+
+			$result = $query -> fetch();
+			
+			
+			if ($result['username'] !== null) {
+				
+				throw new Exception("Användarnamnet är redan upptaget");
+
+			}else{
+				return true;
+			}
+			
+		
+		}	
+
+		public function verifyUserInput($inputUser)
+		{
+			$db = $this -> connection();
+			$this->dbTable = "login";
+
+			$sql = "SELECT ". self::$username ." FROM `$this->dbTable` WHERE ". self::$username ." = ?";
+			$params = array($inputUser);
+
+			$query = $db -> prepare($sql);
+			$query -> execute($params);
+
+			$result = $query -> fetch();
+			
+			
+			if ($result) {
+				
+				return $result['username'];
+				
+			}
+
+		}
+
+		public function verifyPassInput($inputPassword)
+		{
+
+			$db = $this -> connection();
+			$this->dbTable = "login";
+
+			$sql = "SELECT ". self::$password ." FROM `$this->dbTable` WHERE ". self::$password ." = ?";
+			$params = array($inputPassword);
+
+			$query = $db -> prepare($sql);
+			$query -> execute($params);
+
+			$result = $query -> fetch();
+			
+			
+			if ($result) {
+				
+				return $result['password'];
+				
+			}
+
+		}
 
 		public function checkIfEventExist($inputevent)
 		{
@@ -171,6 +244,82 @@
 					return true;
 				}
 		}
+
+		public function checkIfBandAndEventManipulated($pickedevent,$pickedband)
+		{
+				$db = $this -> connection();
+				$this->dbTable = "eventband";
+				$sql = "SELECT ". self::$event .",". self::$band ." FROM `".$this->dbTable."` WHERE ". self::$event ." = ? AND ". self::$band ." = ? ";
+				$params = array($pickedevent,$pickedband);
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetch();
+								
+
+				
+				if ($result['event'] == null && $result['band'] == null ) {
+
+					throw new Exception("Eventen och/eller bandet existerar ej i kolumnen event respektive band");
+
+				}else{
+
+					return true;
+				}
+
+		}
+
+		public function checkIfPickEventManipulated($pickedevent)
+		{
+				$db = $this -> connection();
+				$this->dbTable = "eventband";
+				$sql = "SELECT ". self::$event ." FROM `".$this->dbTable."` WHERE ". self::$event ." = ?";
+				$params = array($pickedevent);
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetch();
+								
+
+				
+				if ($result['event'] == null) {
+
+					throw new Exception("Eventet existerar ej i kolumnen");
+
+				}else{
+
+					return true;
+				}
+
+		}
+
+		public function checkIfPickRatingManipulated($pickedrating)
+		{
+				$db = $this -> connection();
+				$this->dbTable = "rating";
+				$sql = "SELECT ". self::$rating ." FROM `".$this->dbTable."` WHERE ". self::$rating ." = ?";
+				$params = array($pickedrating);
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+
+				$result = $query -> fetch();
+								
+
+				
+				if ($result['rating'] == null) {
+
+					throw new Exception("Betyg existerar ej i kolumnen");
+
+				}else{
+
+					return true;
+				}
+		}
+
+		
 
 		public function fetchAllEvents()
 		{
@@ -420,6 +569,25 @@
 
 				}
 				return $deletegrades;
+		}
+
+		public function addUser($inputuser,$inputpassword) {
+			try {
+
+				$db = $this -> connection();
+				$this->dbTable = "login";
+
+				$sql = "INSERT INTO $this->dbTable (". self::$username .",". self::$password  .") VALUES (?, ?)";
+				$params = array($inputuser, $inputpassword);
+
+				$query = $db -> prepare($sql);
+				$query -> execute($params);
+				
+				return true;
+
+			} catch (\PDOException $e) {
+				die('An unknown error have occured.');
+			}
 		}
 
 

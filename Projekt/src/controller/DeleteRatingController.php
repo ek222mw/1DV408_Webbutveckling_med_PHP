@@ -57,6 +57,7 @@
 					{
 						if($this->db->checkIfIdManipulated($pickedid,$loggedinUser))
 						{
+							
 							$this->db->DeleteGrades($pickedid);
 							$this->deleteratingview->successfulDeleteGradeToEventWithBand();
 						}

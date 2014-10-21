@@ -209,7 +209,7 @@
 				// Visar Lägga till event-meddelande.
 			public function successfulAddEvent()
 			{
-				$this->showMessage("Eventet lades till!");
+				$this->showMessage("Livespelningen lades till!");
 			}
 
 			public function successfulAddBand()
@@ -219,7 +219,7 @@
 
 			public function successfulAddBandToEvent()
 			{
-				$this->showMessage("Bandet har lagt tills i event");
+				$this->showMessage("Bandet har lagt tills i livespelningen");
 			}
 
 		

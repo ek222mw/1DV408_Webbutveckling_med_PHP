@@ -72,14 +72,14 @@
 						<fieldset id='fieldaddrating'>
 							<legend>Lägga till nytt betyg till spelning med följande band</legend>
 							$this->message
-							<span style='white-space: nowrap'>Event:</span>
+							<span style='white-space: nowrap'>Livespelning:</span>
 							 <select name='dropdownpickevent'>";
 							 foreach($eventbandlist->toArray() as $event)
 							 {
 							 	$contentString.= "<option value='". $event->getName()."'>".$event->getName()."</option>";
 							 }
 							 
-							 $contentString .= "</select><input type='submit' name='$this->chooseeventbutton'  value='Välj Event'>";
+							 $contentString .= "</select><input type='submit' name='$this->chooseeventbutton'  value='Välj livespelning'>";
 							
 							 
 							 $contentString .= "

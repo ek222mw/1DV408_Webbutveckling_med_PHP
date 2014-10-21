@@ -2,11 +2,12 @@
 	
 	require_once("./src/model/LoginModel.php");
 	require_once("./src/view/LoginView.php");
-	
+	require_once("./src/model/DBDetails.php");
 	class LoginController
 	{
 		private $view;
 		private $model;
+		private $db;
 		
 		public function __construct()
 		{
@@ -16,6 +17,7 @@
 			// Skapar nya instanser av modell- & vy-klassen.
 			$this->model = new LoginModel($userAgent);
 			$this->view = new LoginView($this->model);
+			$this->db = new DBDetails();
 			
 			// Kontrollerar ifall det finns kakor och ifall användaren inte är inloggad.
 			if($this->view->searchForCookies() && !$this->model->checkLoginStatus())
@@ -98,15 +100,16 @@
 				
 				try
 				{
-					// Verifiera data i fälten.
+					$inputUsername = $this->view->getInputUsername();
+					$inputPassword = $this->view->getInputPassword();
 
-					$this->model->verifyUserInput($_POST['username'], $_POST['password']);
+					$this->model->verifyUserInput($inputUsername, crypt($inputPassword,"emile"));
 					
 					// Kontrollerar om "Håll mig inloggad"-rutan är ikryssad.
 					if($checkboxStatus === true)
 					{
 						// Skapa cookies.
-						$this->view->createCookies($_POST['username'], $this->model->encryptPassword($_POST['password']));
+						$this->view->createCookies($inputUsername, crypt($inputPassword,"emile"));
 						
 						// Visar cookielogin-meddelande.
 						$this->view->successfulLoginAndCookieCreation();
@@ -186,16 +189,18 @@
 								if($this->model->ComparePasswordRepPassword($registerPassword,$registerRepeatPassword))
 								{
 
-									if($this->model->ReadSpecifik($registerUsername))
+									if($this->db->ReadSpecifik($registerUsername))
 									{
 										if($this->model->ValidateUsername($registerUsername))
 										{
 											
-											$this->model->add($registerUsername,$registerPassword);
+											$this->model->addUsersetSuccess($registerUsername,crypt($registerPassword, "emile"));
+											
 											if($this->model->UserRegistered())
 											{
 												$this->view->successfulRegistration();
 												$this->view->showLoginPageWithRegname();
+												
 											}
 
 											

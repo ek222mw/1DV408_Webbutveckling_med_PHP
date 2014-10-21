@@ -137,8 +137,13 @@
 
 						if($this->db->checkIfBandExistsOnEvent($eventdropdownvalue,$banddropdownvalue))
 						{
-							$this->db->addBandToEvent($eventdropdownvalue,$banddropdownvalue);
-							$this->addeventview->successfulAddBandToEvent();
+							if($this->db->checkIfBandAndEventManipulated($eventdropdownvalue,$banddropdownvalue))
+							{
+
+								$this->db->addBandToEvent($eventdropdownvalue,$banddropdownvalue);
+								$this->addeventview->successfulAddBandToEvent();
+								
+							}
 
 						}
 					}
