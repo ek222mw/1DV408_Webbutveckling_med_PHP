@@ -261,7 +261,7 @@
 				
 				if ($result['event'] == null && $result['band'] == null ) {
 
-					throw new Exception("Eventen och/eller bandet existerar ej i kolumnen event respektive band");
+					throw new Exception("Livespelning och/eller bandet existerar ej i kolumnen livespelning respektive band");
 
 				}else{
 
@@ -286,7 +286,7 @@
 				
 				if ($result['event'] == null) {
 
-					throw new Exception("Eventet existerar ej i kolumnen");
+					throw new Exception("Livespelningen existerar ej i kolumnen");
 
 				}else{
 

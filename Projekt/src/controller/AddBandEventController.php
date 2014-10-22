@@ -26,6 +26,7 @@
 			$this->addeventmodel = new AddBandEventModel($userAgent);
 			$this->addeventview = new AddBandEventView($this->loginmodel);
 
+			//Kontroller vilken metod som ska anropas beroende på indata.
 			if($this->loginview->didUserPressAddEvent() && $this->loginmodel->checkLoginStatus())
 			{
 				$this->doControllEvent();
@@ -45,29 +46,37 @@
 
 		}
 
+		/*Kontrollerar om valideringen av indata är korrekt, då läggs Livespelning till.Annars kastas felmeddelande.Anropar alltid
+		doHTMLBody som kontrollerar vilken vy som ska anropas. */
 		public function doControllEvent(){
-
+			
+			//Kontrollerar om användaren är inloggad och har tryckt på lägg till livespelningslänken från menyn.
 			if($this->loginview->didUserPressAddEvent() && $this->loginmodel->checkLoginStatus())
 			{	
+				//Variabler som innehåller funktionsanrop istället för hela funktionsanrop i koden. Gör det lättare att läsa koden.
 				$event = $this->addeventview->getEventName();
-				
-
 
 				try{
 
+					//Kontrollerar om användaren tryckt på lägg till livespelningsknappen.
 					if($this->addeventview->didUserPressAddEventButton())
 					{
-
+							//Kontrollerar längden på det inmatade värdet.
 							if($this->addeventmodel->CheckEventLength($event))
 							{
-								
+								//Kontrollerar om det finns ogiltiga tecken i inmatningen, om inte så returneras true.
+								if($this->loginmodel->ValidateInput($event))
+								{
+									//Kontrollerar om livespelningen redan finns.
 									if($this->db->checkIfEventExist($event))
 									{
+											//lägger till livespelningen och anropar rätt meddelande.
+											$this->db->AddEvent($event);
+											$this->addeventview->successfulAddEvent();
 										
-									$this->db->AddEvent($event);
-									$this->addeventview->successfulAddEvent();
-
 									}
+
+								}
 								
 							}
 						
@@ -85,26 +94,33 @@
 
 		public function doControllBand(){
 		
-
+			//Kontrollerar om användaren är inloggad och har tryckt på lägg till band länken från menyn.
 			if($this->loginview->didUserPressAddBand() && $this->loginmodel->checkLoginStatus())
 			{
-
+				//Variabler som innehåller funktionsanrop istället för hela funktionsanrop i koden. Gör det lättare att läsa koden.
 				$band = $this->addeventview->getBandName();
 				
 
 				try{
 
+					//Kontrollerar om användaren tryckt på lägga till band knappen.
 					if($this->addeventview->didUserPressAddBandButton())
 					{
 						
-
+						//Kontroller längden på band inmatningen 
 						if($this->addeventmodel->CheckBandLength($band))
 						{
-							if($this->db->checkIfBandExist($band))
-							{
-								$this->db->addBand($band);
-								$this->addeventview->successfulAddBand();
 
+							//Kontroller om det finns ogiltiga tecken i inmatningen.
+							if($this->loginmodel->ValidateInput($band))
+							{	
+								//Kontrollerar om bandet redan finns.
+								if($this->db->checkIfBandExist($band))
+								{		
+										//Lägger till bandet och anropar rätt meddelandet.
+										$this->db->addBand($band);
+										$this->addeventview->successfulAddBand();
+								}
 							}
 							
 						}
@@ -142,7 +158,7 @@
 
 								$this->db->addBandToEvent($eventdropdownvalue,$banddropdownvalue);
 								$this->addeventview->successfulAddBandToEvent();
-								
+
 							}
 
 						}

@@ -116,7 +116,7 @@
 							 }
 							 
 							 $contentString .= "</select>
-							<input type='submit' name='$this->chooseothereventbutton'  value='Välj Annat Event'><br>
+							<input type='submit' name='$this->chooseothereventbutton'  value='Välj en annan livespelning'><br>
 							<span style='white-space: nowrap'>Band:</span><br>
 							<select name='dropdownpickband'>";
 							 foreach($bandeventlist->toArray() as $band)
@@ -209,7 +209,7 @@
 				// Visar Lägga till event-meddelande.
 			public function successfulAddGradeToEventWithBand()
 			{
-				$this->showMessage("Betyget har lagts till event med band!");
+				$this->showMessage("Betyget har lagts till livespelning med band!");
 			}
 
 

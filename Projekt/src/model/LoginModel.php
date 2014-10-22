@@ -88,13 +88,13 @@
 			 
 		}	
 	
-		public function ValidateUsername($inputuser){
+		public function ValidateInput($input){
 			
 
 
-			if(!preg_match('/^[A-Za-z][A-Za-z0-9]{5,31}$/', $inputuser))
+			if(!preg_match('/^[A-Za-z][A-Za-z0-9]{2,31}$/', $input))
 			{
-				throw new Exception("Användarnamnet innehåller ogiltiga tecken");
+				throw new Exception("Inmatade värdet innehåller ogiltiga tecken");
 			}
 			return true;
 		}
@@ -109,6 +109,11 @@
 			return $this->loginsuccess;
 		}
 
+		public function cryptPassword($pw)
+		{
+			return crypt($pw,"emile");
+		}
+
 		
 
 		
@@ -119,6 +124,7 @@
 
 			$DB_Username = $this->db->verifyUserInput($inputUsername);
 			$DB_Password = $this->db->verifyPassInput($inputPassword);
+			$emptystring = "";
 				
 
 			if($inputUsername == "" || $inputUsername === NULL)
@@ -127,7 +133,7 @@
 				throw new Exception("Användarnamn saknas");
 			}
 			
-			if($inputPassword == "" || $inputPassword === NULL || $inputPassword === crypt("","emile"))
+			if($inputPassword == "" || $inputPassword === NULL || $inputPassword === $this->cryptPassword($emptystring))
 			{
 				// Kasta undantag.
 				throw new Exception("Lösenord saknas");

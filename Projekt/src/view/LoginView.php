@@ -164,8 +164,8 @@
 					// ...annars visas inloggningssidan.
 					$this->welcomemessage = "<h1 id='h1welcome'>Välkommen till Music-Live Review</h1>
 					<h2 id='h2welcome'>Logga in för att se menyn. Utan konto? Registrera dig och logga in.</h2>
-					<div id='divwelcome'>Musik Live Review handlar om att sätta betyg på livespelningar med band, det är ett lätt att se på vilken livespelning som ett band presterar bäst.
-					När du loggat in kan du lägga till livespelningar,band och koppla band till livespelningar. Du kan även Lägga till, editera och ta bort betyg pålivespelningar med band.</div>";
+					<div id='divwelcome'>Musik Live Review handlar om att sätta betyg på livespelningar med band, det är ett lätt sätt att se på vilken livespelning som ett band presterar bäst.
+					När du loggat in kan du lägga till livespelningar,band och koppla band till livespelningar. Du kan även Lägga till, editera och ta bort betyg på livespelningar med band.</div>";
 					$this->loginStatus = "Ej inloggad";
 
 					$contentString = 

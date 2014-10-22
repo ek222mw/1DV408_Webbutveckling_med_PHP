@@ -3,6 +3,7 @@
 	require_once("./src/model/LoginModel.php");
 	require_once("./src/view/LoginView.php");
 	require_once("./src/model/DBDetails.php");
+	
 	class LoginController
 	{
 		private $view;
@@ -103,13 +104,13 @@
 					$inputUsername = $this->view->getInputUsername();
 					$inputPassword = $this->view->getInputPassword();
 
-					$this->model->verifyUserInput($inputUsername, crypt($inputPassword,"emile"));
+					$this->model->verifyUserInput($inputUsername, $this->model->cryptPassword($inputPassword));
 					
 					// Kontrollerar om "Håll mig inloggad"-rutan är ikryssad.
 					if($checkboxStatus === true)
 					{
 						// Skapa cookies.
-						$this->view->createCookies($inputUsername, crypt($inputPassword,"emile"));
+						$this->view->createCookies($inputUsername, $this->model->cryptPassword($inputPassword));
 						
 						// Visar cookielogin-meddelande.
 						$this->view->successfulLoginAndCookieCreation();
@@ -191,10 +192,10 @@
 
 									if($this->db->ReadSpecifik($registerUsername))
 									{
-										if($this->model->ValidateUsername($registerUsername))
+										if($this->model->ValidateInput($registerUsername))
 										{
 											
-											$this->model->addUsersetSuccess($registerUsername,crypt($registerPassword, "emile"));
+											$this->model->addUsersetSuccess($registerUsername,$this->model->cryptPassword($registerPassword));
 											
 											if($this->model->UserRegistered())
 											{
