@@ -12,11 +12,9 @@
 		
 		public function __construct()
 		{
-			// Sparar ner användarens användaragent och ip. Används vid verifiering av användaren.
-			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 						
-			// Skapar nya instanser av modell- & vy-klassen.
-			$this->model = new LoginModel($userAgent);
+			// Skapar nya instanser av modell- & vy-klassen och lägger dessa i privata variabler.
+			$this->model = new LoginModel();
 			$this->view = new LoginView($this->model);
 			$this->db = new DBDetails();
 			
@@ -69,6 +67,7 @@
 				
 				$this->view->showLoginPage();
 			}
+			
 		}
 		
 		// Hämtar sidans innehåll.
@@ -79,6 +78,7 @@
 				
 				$this->view->showLoginPage();
 			}
+
 			
 		}
 		
@@ -131,11 +131,11 @@
 			
 				
 			
-				if(!$this->view->didUserPressLogout() && !$this->model->checkLoginStatus())
-				{
+			if(!$this->view->didUserPressLogout() && !$this->model->checkLoginStatus())
+			{
 					
-					$this->view->showLoginPage();
-				}
+				$this->view->showLoginPage();
+			}
 
 
 

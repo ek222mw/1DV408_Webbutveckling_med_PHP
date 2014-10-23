@@ -5,7 +5,6 @@
 	require_once("./src/view/LoginView.php");
 	require_once("./src/view/AddBandEventView.php");
 	require_once("./src/view/AddRatingView.php");
-	require_once("./src/model/AddRatingModel.php");
 	require_once("./src/model/DBDetails.php");
 
 	class AddRatingController{
@@ -13,22 +12,18 @@
 
 		private $loginview;
 		private $loginmodel;
-		private $addeventview;
+		private $addbandeventview;
 		private $addratingview;
-		private $addratingmodel;
 		private $db;
 
 		public function __construct(){
 
-			// Sparar ner användarens användaragent och ip. Används vid verifiering av användaren.
-			$userAgent = $_SERVER['HTTP_USER_AGENT'];
 						
-			// Skapar nya instanser av modell- & vy-klasser.
-			$this->loginmodel = new LoginModel($userAgent);
+			// Skapar nya instanser av modell- & vy-klasser och lägger dessa i privata variabler.
+			$this->loginmodel = new LoginModel();
 			$this->loginview = new LoginView($this->loginmodel);
-			$this->addeventview = new AddBandEventView();
+			$this->addbandeventview = new AddBandEventView();
 			$this->addratingview = new AddRatingView();
-			$this->addratingmodel = new AddRatingModel();
 			$this->db = new DBDetails();
 
 
@@ -43,27 +38,27 @@
 			if($this->loginview->didUserPressAddRating() && $this->loginmodel->checkLoginStatus())
 			{
 				//Variabler som innehåller funktionsanrop istället för hela funktionsanrop i koden. Gör det lättare att läsa koden.
-				$eventdropdownvalue = $this->addeventview->pickedEventDropdownValue();
-				$banddropdownvalue = $this->addeventview->pickedBandDropdownValue();
+				$eventdropdownvalue = $this->addbandeventview->pickedEventDropdownValue();
+				$banddropdownvalue = $this->addbandeventview->pickedBandDropdownValue();
 				$gradedropdownvalue = $this->addratingview->pickedGradeDropdownValue();
 				$loggedinUser = $this->loginmodel->getLoggedInUser();
 
 
 				try{
 
-					//Kontrollerar om användaren tryckt på Lägga till betyg knappen.
+					
 					if($this->addratingview->didUserPressAddGradeButton())
 					{	
-						//Kontrollerar om användaren redan satt betyg på den livespelningen med det bandet. 
+						 
 						if($this->db->checkIfGradeExistOnEventBandUser($eventdropdownvalue,$banddropdownvalue,$loggedinUser))
 						{	
-							//Kontrollerar om livespelningen och/eller bandet har fått sina värden manipulerade.
+							
 							if($this->db->checkIfBandAndEventManipulated($eventdropdownvalue,$banddropdownvalue))
 							{	
-								//Kontrollerar om betyget har fått sitt värde manipulerat.
+								
 								if($this->db->checkIfPickRatingManipulated($gradedropdownvalue))
 								{	
-									//Lägger till betyg och anropar rätt meddelande och skickar ut det till doHTMLBody.
+									
 									$this->db->addGradeToEventBandWithUser($eventdropdownvalue,$banddropdownvalue,$gradedropdownvalue,$loggedinUser);
 									$this->addratingview->successfulAddGradeToEventWithBand();
 								}
@@ -92,10 +87,11 @@
 		public function doHTMLBody()
 		{
 				
+				//Variabler som innehåller funktionsanrop istället för hela funktionsanrop i koden. Gör det lättare att läsa koden
 				$events = $this->db->fetchAllEventWithBands();
 				$bands = $this->db->fetchAllBandsWithEvent();
 				$grades = $this->db->fetchAllGrades();
-				$eventdropdownvalue = $this->addeventview->pickedEventDropdownValue();
+				$eventdropdownvalue = $this->addbandeventview->pickedEventDropdownValue();
 				$chosenband = $this->db->fetchChosenBandsInEventDropdown($eventdropdownvalue);
 				$chosenevent = $this->db->fetchChosenEventInEventDropDown($eventdropdownvalue);
 				
@@ -113,6 +109,7 @@
 					{
 						$this->addratingview->ShowChosenEventRatingPage($chosenevent,$chosenband,$grades);
 					}
+
 					if($this->addratingview->didUserPressChooseOtherGradeEvent())
 					{
 						$this->addratingview->ShowAddRatingPage($events);

@@ -12,10 +12,11 @@
 
 		
 		
-		public function __construct($userAgent)
+		public function __construct()
 		{
 			// Sparar användarens useragent i den privata variablerna.
-			$this->sessionUserAgent = $userAgent;
+			// Sparar ner användarens användaragent och ip. Används vid verifiering av användaren.
+			$this->sessionUserAgent = $_SERVER['HTTP_USER_AGENT'];
 			$this->db = new DBDetails();
 		}
 		
@@ -88,10 +89,9 @@
 			 
 		}	
 	
+		//Kontrollerar om det finns ogiltiga tecken i inmatningen, om inte så returneras true.
 		public function ValidateInput($input){
 			
-
-
 			if(!preg_match('/^[A-Za-z][A-Za-z0-9]{2,31}$/', $input))
 			{
 				throw new Exception("Inmatade värdet innehåller ogiltiga tecken");
@@ -122,8 +122,8 @@
 		public function verifyUserInput($inputUsername, $inputPassword, $isCookieLogin = false)
 		{
 
-			$DB_Username = $this->db->verifyUserInput($inputUsername);
-			$DB_Password = $this->db->verifyPassInput($inputPassword);
+			$DB_Username = $this->db->getDBUserInput($inputUsername);
+			$DB_Password = $this->db->getDBPassInput($inputPassword);
 			$emptystring = "";
 				
 

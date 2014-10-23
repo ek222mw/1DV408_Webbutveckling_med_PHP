@@ -1,19 +1,18 @@
 <?php
 
-	require_once("DBDetails.php");
+	
 
 	class AddBandEventModel{
 
-			private $db;
+			
 
-			public function __construct(){
+		public function __construct(){
 
 				
-				$this->db = new DBDetails();
-			}
+		}
 
 
-			
+		//Kontrollerar längden på det inmatade livespelningsvärdet.	
 		public function CheckEventLength($event){
 
 			if(mb_strlen($event) < 1 || mb_strlen($event) > 50 ){
@@ -25,7 +24,7 @@
 			return true;
 
 		}
-
+		//Kontrollerar längden på det inmatade bandvärdet.
 		public function CheckBandLength($band){
 
 			if(mb_strlen($band) < 1 || mb_strlen($band) > 50 ){

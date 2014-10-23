@@ -40,6 +40,7 @@
 			return false;
 		}
 
+		//Kontrollerar om användaren tryckt på lägga till livespelning knappen.
 		public function didUserPressAddEventButton(){
 
 			if(isset($_POST[$this->createeventbutton]))
@@ -62,6 +63,7 @@
 
 		}
 
+		//Kontrollerar om användaren tryckt på lägga till band knappen.
 		public function didUserPressAddBandButton()
 		{
 

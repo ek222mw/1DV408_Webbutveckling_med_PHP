@@ -20,6 +20,7 @@
 				$this->timedate = new TimeDate();
 		}
 
+		//kontrollerar om användaren tryckt på lägga till betyg knappen.
 		public function didUserPressAddGradeButton(){
 
 			if(isset($_POST[$this->creategradebutton]))
