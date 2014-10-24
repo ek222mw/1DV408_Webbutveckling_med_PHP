@@ -10,7 +10,7 @@
 		private $m_band;
 		private $m_user;
 
-		//tilldelar privata variabler konstruktorns invärden.
+		//Tilldelar privata variabler konstruktorns invärden.
 		public function __construct($grade,$id,$event,$band,$user){
 			$this->m_grade = $grade;
 			$this->m_id = $id;

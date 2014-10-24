@@ -30,7 +30,7 @@
 		{
 			if($this->loginview->didUserPressEditGrades() && $this->loginmodel->checkLoginStatus())
 			{
-				$pickedid = $this->editratingview->getEditPickedButtonValueSaved();
+				$pickedid = $this->editratingview->getEditPickedValueSaved();
 				$loggedinUser = $this->loginmodel->getLoggedInUser();
 				$neweditgrade = $this->editratingview->getDropdownPickedEditGrade();
 
@@ -74,7 +74,7 @@
 			if($this->editratingview->didUserPressEditPickedButton())
 			{
 
-				$pickedid = $this->editratingview->getEditPickedButtonValue();
+				$pickedid = $this->editratingview->getEditPickedValue();
 				$pickedgradetoEdit = $this->db->fetchIdPickedEditGrades($pickedid);
 				$newgrade = $this->db->fetchAllGrades();
 

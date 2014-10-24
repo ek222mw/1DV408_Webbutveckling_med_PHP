@@ -5,7 +5,7 @@
 		private $m_name;
 		private $m_id;
 
-		//tilldelar privata variabler konstruktorns invärden.
+		//Tilldelar privata variabler konstruktorns invärden.
 		public function __construct($name,$id){
 			$this->m_name = $name;
 			$this->m_id = $id;

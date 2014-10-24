@@ -18,38 +18,38 @@
 			$this->view = new LoginView($this->model);
 			$this->db = new DBDetails();
 			
-			// Kontrollerar ifall det finns kakor och ifall användaren inte är inloggad.
+			// Kontrollerar ifall det finns kakor och ifall användaren inte är inloggad.Tilldelad kod.
 			if($this->view->searchForCookies() && !$this->model->checkLoginStatus())
 			{
 				try
 				{
-					// Logga in med kakor.
+					// Logga in med kakor.Tilldelad kod.
 					$this->view->loginWithCookies();
 					
 					
 				}
 				catch(Exception $e)
 				{
-					// Visar eventuella felmeddelanden.
+					// Visar eventuella felmeddelanden.Tilldelad kod.
 					$this->view->showMessage($e->getMessage());
 					
-					// Tar bort de felaktiga kakorna.
+					// Tar bort de felaktiga kakorna.Tilldelad kod.
 					$this->view->removeCookies();
 				}
 			}
-			else // Annars, visa standardsidan på normalt vis.
+			else // Annars, visa standardsidan på normalt vis.Tilldelad kod.
 			{
-				// Ifall användaren tryckt på "Logga in" och inte redan är inloggad...
+				// Ifall användaren tryckt på "Logga in" och inte redan är inloggad...Tilldelad kod.
 				if($this->view->didUserPressLogin() && !$this->model->checkLoginStatus())
 				{
-					// ...så loggas användaren in.
+					// ...så loggas användaren in.Tilldelad kod.
 					$this->doLogin();
 				}
 			
-				// Ifall användaren tryckt på "Logga ut" och är inloggad...
+				// Ifall användaren tryckt på "Logga ut" och är inloggad...Tilldelad kod.
 				if($this->view->didUserPressLogout() && $this->model->checkLoginStatus())
 				{
-					// ...så loggas användaren ut.
+					// ...så loggas användaren ut.Tilldelad kod.
 					$this->doLogout();
 				}
 
@@ -82,18 +82,18 @@
 			
 		}
 		
-		// Försöker verifiera och logga in användaren.
+		// Försöker verifiera och logga in användaren.Tilldelad kod.Tilldelad kod.
 		public function doLogin()
 		{
 			
-			// Kontrollerar ifall användaren tryckt på "Logga in" och inte redan är inloggad.
+			// Kontrollerar ifall användaren tryckt på "Logga in" och inte redan är inloggad.Tilldelad kod.Tilldelad kod.
 			if($this->view->didUserPressLogin() && !$this->model->checkLoginStatus())
 			{
 				
-				// Kontrollerar indata
+				// Kontrollerar indata.Tilldelad kod.
 				$checkboxStatus = false;
 				
-				// Kontrollera ifall "Håll mig inloggad"-rutan är ikryssad.
+				// Kontrollera ifall "Håll mig inloggad"-rutan är ikryssad.Tilldelad kod.
 				if(isset($_POST['checkbox']))
 				{
 					$checkboxStatus = true;
@@ -112,25 +112,25 @@
 						// Skapa cookies.
 						$this->view->createCookies($inputUsername, $this->model->cryptPassword($inputPassword));
 						
-						// Visar cookielogin-meddelande.
+						// Visar cookielogin-meddelande.Tilldelad kod.Tilldelad kod.
 						$this->view->successfulLoginAndCookieCreation();
 					}
 					else
 					{
-						// Visar login-meddelande.
+						// Visar login-meddelande.Tilldelad kod.
 						$this->view->successfulLogin();
 						
 					}
 				}
 				catch(Exception $e)
 				{
-					// Visar eventuella felmeddelanden.
+					// Visar eventuella felmeddelanden.Tilldelad kod.
 					$this->view->showMessage($e->getMessage());
 				}
 			}
 			
 				
-			
+			//Kontrollerar om användaren inte tryckt på logga ut knappen och inte är inloggad så anropa logga in sidan i vyn.
 			if(!$this->view->didUserPressLogout() && !$this->model->checkLoginStatus())
 			{
 					
@@ -145,28 +145,29 @@
 			
 		}
 		
-		// Loggar ut användaren.
+		// Loggar ut användaren.Tilldelad kod.
 		public function doLogout()
 		{
-			// Kontrollera indata, tryckte användaren på Logga ut?
+			// Kontrollera indata, tryckte användaren på Logga ut?Tilldelad kod.
 			if($this->view->didUserPressLogout() && $this->model->checkLoginStatus())
 			{
-				// Logga ut.
+				// Logga ut.Tilldelad kod.
 				$this->model->logOut();
 				
-				// Ifall det finns cookies...
+				// Ifall det finns cookies...Tilldelad kod.
 				if($this->view->searchForCookies())
 				{
-					// ...ta bort dem.
+					// ...ta bort dem.Tilldelad kod.
 					$this->view->removeCookies();
 				}
 				
-				//Generera utdata, tillåt användaren att logga in igen.
+				//Generera utdata, tillåt användaren att logga in igen.Tilldelad kod.
 				$this->doLogin();
 				$this->view->successfulLogout();
 			}
 		}
 
+		//Kontrollerar indata om allt är uppfyllt så registreras en ny användare med inmatade uppgifter annars kastas undantag som innehåller felmeddelande.
 		public function doRegister(){
 
 			$registerUsername = $this->view->getRegisterUsername();
@@ -220,11 +221,11 @@
 				}
 				
 			}
+
+			//Kontrollerar om uttrycket är falskt så anropas registrerings sidan i vyn.
 			if($this->model->UserRegistered() == false)
 			{
 
-			
-			
 				return $this->view->showRegisterPage();
 			}
 			

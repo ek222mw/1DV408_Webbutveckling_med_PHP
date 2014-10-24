@@ -1,4 +1,4 @@
-#h1welcome{
+.h1welcome{
 
 	text-align:center;
 	
@@ -15,7 +15,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 copy
 }
 
-#h2welcome{
+.h2welcome{
 
 	text-align: center;
 	
@@ -32,7 +32,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 copy
 }
 
-#divwelcome{
+.divwelcome{
 
 	float: left;
 	
@@ -163,13 +163,13 @@ input[type="submit"]:active {
    background: #295b7d;
    }
 
-#form{
+.form{
 
 	float:right;
 	width:50%;
 }   
 
-#loginstatus{
+.loginstatus{
 
 	font-family: verdana;
 	font-size: 20px;
@@ -188,21 +188,21 @@ h1{
 	font-family:verdana;
 }
 
-#divaddevent{
+.divaddevent{
 
 	font-family:verdana;
 }
 
-#fieldaddevent{
+.fieldaddevent{
 
 	width:40%;
 }
 
-#divaddband{
+.divaddband{
 	font-family: verdana;
 }
 
-#fieldaddband{
+.fieldaddband{
 	width:40%;
 }
 
@@ -219,50 +219,50 @@ select{
 
 }
 
-#fieldaddbandevent{
+.fieldaddbandevent{
 	width:30%;
 
 }
 
-#divaddbandevent{
+.divaddbandevent{
 
 	font-family: verdana;
 }
 
-#divlogin{
+.divlogin{
 	font-family: verdana;
 }
 
-#divregister{
+.divregister{
 	font-family: verdana;
 }
 
-#fieldregister{
+.fieldregister{
 
 	width:40%;
 }
 
-#divmenu{
+.divmenu{
 	font-family: verdana;
 }
 
-#fieldaddrating{
+.fieldaddrating{
 	width:40%;
 }
 
-#divaddrating{
+.divaddrating{
 	font-family: verdana;
 }
 
-#fieldaddchosenrating{
+.fieldaddchosenrating{
 	width:40%;
 }
 
-#divaddchosenrating{
+.divaddchosenrating{
 	font-family: verdana;
 }
 
-#fieldshowall{
+.fieldshowall{
 	width:400px;
 	float:left;
 	margin:10px;
@@ -270,11 +270,11 @@ select{
 
 }
 
-#divshowall{
+.divshowall{
 	font-family: verdana;
 }
 
-#pgradient{
+.pgradient{
 
 	border-radius: 5px;
 
@@ -288,7 +288,7 @@ select{
 
 }
 
-#spangradient{
+.spangradient{
 
 	border-radius: 5px;
 
@@ -302,37 +302,37 @@ select{
 
 }
 
-#fieldeditrating{
+.fieldeditrating{
 	width:400px;
 	float:left;
 	margin:10px;
 
 }
 
-#diveditrating{
+.diveditrating{
 	font-family: verdana;
 }
 
-#fieldchoseneditrating{
+.fieldchoseneditrating{
 	width:400px;
 	float:left;
 	
 }
 
-#divchoseneditrating{
+.divchoseneditrating{
 	font-family: verdana;
 }
 
-#divdeleterating{
+.divdeleterating{
 	font-family: verdana;
 }
 
-#fielddeleterating{
+.fielddeleterating{
 	width:400px;
 	float:left;
 }
 
-#legendgradient{
+.legendgradient{
 
 	border-radius: 5px;
 

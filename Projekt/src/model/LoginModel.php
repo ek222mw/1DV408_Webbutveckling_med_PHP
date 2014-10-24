@@ -14,13 +14,13 @@
 		
 		public function __construct()
 		{
-			// Sparar användarens useragent i den privata variablerna.
-			// Sparar ner användarens användaragent och ip. Används vid verifiering av användaren.
+			// Sparar anvÃ¤ndarens useragent i den privata variablerna.
+			// Sparar ner anvÃ¤ndarens anvÃ¤ndaragent och ip. AnvÃ¤nds vid verifiering av anvÃ¤ndaren.
 			$this->sessionUserAgent = $_SERVER['HTTP_USER_AGENT'];
 			$this->db = new DBDetails();
 		}
 		
-		// Kontrollerar loginstatusen. Är användaren inloggad returnerar metoden true, annars false.
+		// Kontrollerar loginstatusen. Ã„r anvÃ¤ndaren inloggad returnerar metoden true, annars false.Tilldelad kod.
 		public function checkLoginStatus()
 		{
 			if(isset($_SESSION[$this->loggedIn]) && $_SESSION[$this->loggedIn] === true && $_SESSION[$this->sessionUserAgent] === $this->sessionUserAgent)
@@ -31,24 +31,26 @@
 			return false;
 		}
 
+		//Kontrollerar om registrerings anvÃ¤ndarnamn och lÃ¶senord har fÃ¶r fÃ¥ tecken, isÃ¥danafall kasta undantag, annars returnerar true.
 		public function CheckBothRegInput($registerUsername,$registerPassword){
 
 			if(mb_strlen($registerUsername) < 3 && mb_strlen($registerPassword) < 6){
 
 				// Kasta undantag.
-				throw new Exception("Användarnamnet har för få tecken. Minst 3 tecken<br>Lösenordet har för få tecken. Minst 6 tecken");
+				throw new Exception("AnvÃ¤ndarnamnet har fÃ¶r fÃ¥ tecken. Minst 3 tecken<br>LÃ¶senordet har fÃ¶r fÃ¥ tecken. Minst 6 tecken");
 				
 			}
 			return true;
 
 		}
 
+		//Kontrollerar om registrerings anvÃ¤ndarnamnet har fÃ¶r fÃ¥ tecken, isÃ¥danafall kasta undantag, annars returnerar true.
 		public function CheckRegUsernameLength($registerUsername){
 
 			if(mb_strlen($registerUsername) < 3){
 
 				// Kasta undantag.
-				throw new Exception("Användarnamnet har för få tecken. Minst 3 tecken");
+				throw new Exception("AnvÃ¤ndarnamnet har fÃ¶r fÃ¥ tecken. Minst 3 tecken");
 				
 			}
 			return true;
@@ -56,12 +58,13 @@
 			
 		}
 
+		//Kontrollerar om registrerings lÃ¶senordet har fÃ¶r fÃ¥ tecken, isÃ¥danafall kasta undantag, annars returnerar true.
 		public function CheckReqPasswordLength($registerPassword){
 
 			if(mb_strlen($registerPassword) < 6){
 
 				// Kasta undantag.
-				throw new Exception("Lösenordet har för få tecken. Minst 6 tecken");
+				throw new Exception("LÃ¶senordet har fÃ¶r fÃ¥ tecken. Minst 6 tecken");
 				
 				
 			}
@@ -71,16 +74,17 @@
 
 		}
 
+		//Kontrollerar om registrerings lÃ¶senordet och det repiterade lÃ¶senordet matchar, isÃ¥danafall returnera true, annars kasta undantag.
 		public function ComparePasswordRepPassword($registerPassword, $repeatPassword){
 
 				if($registerPassword !== $repeatPassword)
 				{
-					throw new Exception("Lösenorden matchar inte");
+					throw new Exception("LÃ¶senorden matchar inte");
 				}
 				return true;
 		}
 
-
+		//LÃ¤gger till registrerings anvÃ¤ndarnamn och lÃ¶senord och fÃ¥r tillbaks true som sÃ¤tter privata variabeln success som i sin tur aktiverar sÃ¥ det kommer ut ett rÃ¤tt meddelande. 
 		public function addUsersetSuccess($registerUsername,$registerPassword)
 		{
 			$this->success = $this->db->addUser($registerUsername,$registerPassword);
@@ -89,26 +93,29 @@
 			 
 		}	
 	
-		//Kontrollerar om det finns ogiltiga tecken i inmatningen, om inte så returneras true.
+		//Kontrollerar om det finns ogiltiga tecken i inmatningen, om inte sÃ¥ returneras true annars kasta undantag.
 		public function ValidateInput($input){
 			
-			if(!preg_match('/^[A-Za-z][A-Za-z0-9]{2,31}$/', $input))
+			if(!preg_match('/^[A-Za-z-Ã¥Ã¤Ã¶Ã…Ã„Ã–][A-Za-z0-9-\s-&-Ã¥Ã¤Ã¶Ã…Ã„Ã–]{2,50}$/', $input))
 			{
-				throw new Exception("Inmatade värdet innehåller ogiltiga tecken");
+				throw new Exception("Inmatade vÃ¤rdet innehÃ¥ller ogiltiga tecken");
 			}
 			return true;
 		}
 
+		//Returnerar privata variabeln success status.
 		public function UserRegistered(){
 
 			return $this->success;
 		}
 
+		//Returnerar statusen pÃ¥ variabeln loginsuccess.
 		public function UserLogin(){
 
 			return $this->loginsuccess;
 		}
 
+		//Returnerar lÃ¶senordet som krypterat.
 		public function cryptPassword($pw)
 		{
 			return crypt($pw,"emile");
@@ -118,7 +125,7 @@
 
 		
 		
-		// Kontrollerar användarinput gentemot de faktiska användaruppgifterna.
+		// Kontrollerar anvÃ¤ndarinput gentemot de faktiska anvÃ¤ndaruppgifterna.
 		public function verifyUserInput($inputUsername, $inputPassword, $isCookieLogin = false)
 		{
 
@@ -130,20 +137,20 @@
 			if($inputUsername == "" || $inputUsername === NULL)
 			{
 				// Kasta undantag.
-				throw new Exception("Användarnamn saknas");
+				throw new Exception("AnvÃ¤ndarnamn saknas");
 			}
 			
 			if($inputPassword == "" || $inputPassword === NULL || $inputPassword === $this->cryptPassword($emptystring))
 			{
 				// Kasta undantag.
-				throw new Exception("Lösenord saknas");
+				throw new Exception("LÃ¶senord saknas");
 			}
 			
 			
-			// Kontrollerar ifall inparametrarna matchar de faktiska användaruppgifterna.
+			// Kontrollerar ifall inparametrarna matchar de faktiska anvÃ¤ndaruppgifterna.
 			if($inputUsername == $DB_Username && $inputPassword == $DB_Password)
 			{
-				// Inloggningsstatus och användarnamn sparas i sessionen.
+				// Inloggningsstatus och anvÃ¤ndarnamn sparas i sessionen.
 				$_SESSION[$this->loggedIn] = true;
 				$_SESSION[$this->loggedInUser] = $inputUsername;
 				
@@ -155,25 +162,26 @@
 			}
 			else
 			{
-				// Är det en inloggning med cookies...
+				// Ã„r det en inloggning med cookies...Tilldelad kod.
 				if($isCookieLogin)
 				{
-					// Kasta cookie-felmeddelande.
+					// Kasta cookie-felmeddelande.Tilldelad kod.
 					$this->cookieException();
 				}
 				
 				// Kasta undantag.
-				throw new Exception("Felaktigt användarnamn och/eller lösenord");
+				throw new Exception("Felaktigt anvÃ¤ndarnamn och/eller lÃ¶senord");
 			}
 		}
 		
+		//Tilldelad kod.
 		public function cookieException()
 		{
 			// Kasta cookie-felmeddelande.
 			throw new Exception("Felaktig information i cookie");
 		}
 		
-		// Hämtar användarnamnet från sessionen.
+		// HÃ¤mtar anvÃ¤ndarnamnet frÃ¥n sessionen. 
 		public function getLoggedInUser()
 		{
 			if(isset($_SESSION[$this->loggedInUser]))
@@ -182,7 +190,7 @@
 			}
 		}
 		
-		// Logout-metod som avsätter och förstör sessionen.
+		// Logout-metod som avsÃ¤tter och fÃ¶rstÃ¶r sessionen.Tilldelad kod.
 		public function logOut()
 		{
 			
@@ -190,25 +198,25 @@
 			session_destroy();
 		}
 		
-		// Skapar en fil på servern som innehåller det medskickade objektets värden.
+		// Skapar en fil pÃ¥ servern som innehÃ¥ller det medskickade objektets vÃ¤rden.Tilldelad kod.
 		public function createReferenceFile($referenceValue, $fileName)
 		{
-			// Skapar och öppnar en textfil.
+			// Skapar och Ã¶ppnar en textfil.
 			$referenceFile = fopen($fileName . ".txt", "w") or die("Unable to open file!");
 			
 			fwrite($referenceFile, $referenceValue);
 			
-			// Stänger textfilen.
+			// StÃ¤nger textfilen.
 			fclose($referenceFile);
 		}
 		
-		// Kontrollerar textfilen gentemot kakornas tid.
+		// Kontrollerar textfilen gentemot kakornas tid.Tilldelad kod.
 		public function validateExpirationTime()
 		{
-			// Variabel som ska innehålla tiden från filen.
+			// Variabel som ska innehÃ¥lla tiden frÃ¥n filen.
 			$correctTime = "";
 			
-			// Öppnar filen, läser igenom den och sparar värdet i $correctTime, för att sedan stänga filen.
+			// Ã–ppnar filen, lÃ¤ser igenom den och sparar vÃ¤rdet i $correctTime, fÃ¶r att sedan stÃ¤nga filen.
 			$file = fopen('cookieExpirationTime.txt','r');
 			while ($line = fgets($file))
 			{
@@ -216,15 +224,15 @@
 			}
 			fclose($file);
 			
-			// Om tiden från filen är större än just precis nu...
+			// Om tiden frÃ¥n filen Ã¤r stÃ¶rre Ã¤n just precis nu...
 			if(intval($correctTime) > time())
 			{
-				// Returnera true, kakan är fortfarande giltig.
+				// Returnera true, kakan Ã¤r fortfarande giltig.
 				return true;
 			}
 			else
 			{
-				// Annars kalla på felmeddelandet, kakans levnadstid är över.
+				// Annars kalla pÃ¥ felmeddelandet, kakans levnadstid Ã¤r Ã¶ver.
 				$this->cookieException();
 			}
 		}

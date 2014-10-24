@@ -1,12 +1,13 @@
 <?php
 
 	require_once("common/HTMLView.php");
-	require_once("TimeDate.php");
+	
 
+	//Ärver HTMLView
 	class EditRatingView extends HTMLView {
 
 
-		private $timedate;
+		
 		private $message = "";
 
 		private $editbutton = "editbutton";
@@ -16,12 +17,13 @@
 		private $editgradebutton = "editgradebutton";
 
 
-
+		
 		public function __construct(){
 
-				$this->timedate = new TimeDate();
+				
 		}
 
+		//Kollar om användaren tryckt på vald editeringsknapp, returnera sant annars falskt.
 		public function didUserPressEditPickedButton()
 		{
 			if(isset($_POST[$this->editbutton]))
@@ -31,7 +33,8 @@
 			return false;
 		}
 
-		public function getEditPickedButtonValue()
+		//Kollar om användaren valt ett värde i inputen, om så returnera värdet annars falskt.
+		public function getEditPickedValue()
 		{
 			if(isset($_POST[$this->pickededitid]))
 			{
@@ -40,7 +43,8 @@
 			return false;
 		}
 
-		public function getEditPickedButtonValueSaved()
+		//Kollar om användaren valt ett värde i inputen, om så returnera värdet annars falskt.
+		public function getEditPickedValueSaved()
 		{
 			if(isset($_POST[$this->pickedid]))
 			{
@@ -50,7 +54,7 @@
 		}
 
 
-
+		//Kollar om användaren valt ett värde i editeringsdropdownen, returnera värdet annars falskt.
 		public function getDropdownPickedEditGrade()
 		{
 			if(isset($_POST[$this->dropdownneweditgrade]))
@@ -60,6 +64,7 @@
 			return false;
 		}
 
+		//Kollar om användaren tryckt på editera betyg knappen, returnera sant annars falskt.
 		public function didUserPressEditGradeButton()
 		{
 			if(isset($_POST[$this->editgradebutton]))
@@ -69,104 +74,96 @@
 			return false;
 		}
 		
-
+		//Visar editera betyg formuläret.
 		public function ShowEditRatingPage(EditGradeList $gradelist)
 		{
 
-
-			
-			
-
-
-			// visa Editera betyg sidan.
 				
-					$contentString = "$this->message";
-							 foreach($gradelist->toArray() as $grade)
-							 {
-							 	$contentString .=  "<form method=post >";
-							 	$contentString .= "
-								<fieldset id='fieldeditrating'><legend>Editera betyg</legend><br>
-								<span id='spangradient' style='white-space: nowrap'>LiveSpelning:</span>";
-							 	$contentString.= "<p id='pgradient'>".$grade->getEvent()."</p>";
-							 	$contentString .= "<span id='spangradient' style='white-space: nowrap'>Band:</span>";
-							 	$contentString.="<p id='pgradient'>".$grade->getBand()."</p>";
-							 	$contentString .= "<span id='spangradient' style='white-space: nowrap'>Betyg:</span>";
-							 	$contentString.= "<p id='pgradient'>".$grade->getGrade()."</p>"; 
-							 	$contentString.= "<input type='hidden' name='$this->pickededitid' value='". $grade->getID() ."'>";
-							 	$contentString.= "<input type='submit' name='$this->editbutton' value='Editera'>";
-							 	$contentString .= "</fieldset>";
-							 	$contentString .= "</form>";
-							 }
+			$contentString = "$this->message";
+			foreach($gradelist->toArray() as $grade)
+			{
+			$contentString .=  "<form method=post >";
+			$contentString .= "
+			<fieldset class='fieldeditrating'><legend>Editera betyg</legend><br>
+			<span class='spangradient' style='white-space: nowrap'>LiveSpelning:</span>";
+			$contentString.= "<p class='pgradient'>".$grade->getEvent()."</p>";
+			$contentString .= "<span class='spangradient' style='white-space: nowrap'>Band:</span>";
+			$contentString.="<p class='pgradient'>".$grade->getBand()."</p>";
+			$contentString .= "<span class='spangradient' style='white-space: nowrap'>Betyg:</span>";
+			$contentString.= "<p class='pgradient'>".$grade->getGrade()."</p>"; 
+			$contentString.= "<input type='hidden' name='$this->pickededitid' value='". $grade->getID() ."'>";
+			$contentString.= "<input type='submit' name='$this->editbutton' value='Editera'>";
+			$contentString .= "</fieldset>";
+			$contentString .= "</form>";
+			}
 							 
 
-					$HTMLbody = "<div id='diveditrating'>
-				<h1>Editera betyg till vald spelning med band</h1>
-				<p><a href='?login'>Tillbaka</a></p>
-				$contentString<br>
-				</div>";
+			$HTMLbody = "<div class='diveditrating'>
+			<h1>Editera betyg till vald spelning med band</h1>
+			<p><a href='?login'>Tillbaka</a></p>
+			$contentString<br>
+			</div>";
 
-				$this->echoHTML($HTMLbody);
+			$this->echoHTML($HTMLbody);
 		}
 
-
+		// visa editerings formuläret med valt betyg att ändra.
 		public function ShowChosenEditRatingPage(EditGradeList $editgradelist, GradeList $gradelist)
 		{
 			
 			
-			$timedate = $this->timedate->TimeAndDate();
+			
 
-			// visa editerings sidan med valt betyg att ändra.
+			
 				
-					$contentString = 
-					 "
-					<form method=post >
-						
-							<legend>Editera betyg</legend><br>$this->message";
-							
-							 foreach($editgradelist->toArray() as $editgrade)
-							 {
+			$contentString = "
+			<form method=post >
+			<legend>Editera betyg</legend><br>$this->message";
+			foreach($editgradelist->toArray() as $editgrade)
+			{
 							 	
-							 	$contentString .= "
-								<fieldset id='fieldchoseneditrating'><br><span id='spangradient' style='white-space: nowrap'>
-								LiveSpelning</span>";
-							 	$contentString.= "<p id='pgradient'>".$editgrade->getEvent()."</p>";
-							 	$contentString .= "<span id='spangradient' style='white-space: nowrap'>Band:</span>";
-							 	$contentString.="<p id='pgradient'>".$editgrade->getBand()."</p>";
-							 	$contentString .= "<span id='spangradient' style='white-space: nowrap'>Betyg:</span>";
-							 	$contentString.="<p id='pgradient'>".$editgrade->getGrade()."</p>";
-							 	$contentString.= "<input type='hidden' name='$this->pickedid' value='". $editgrade->getID() ."'>";
+				$contentString .= "
+				<fieldset class='fieldchoseneditrating'><br><span class='spangradient' style='white-space: nowrap'>
+				LiveSpelning</span>";
+				$contentString.= "<p class='pgradient'>".$editgrade->getEvent()."</p>";
+				$contentString .= "<span class='spangradient' style='white-space: nowrap'>Band:</span>";
+				$contentString.="<p class='pgradient'>".$editgrade->getBand()."</p>";
+				$contentString .= "<span class='spangradient' style='white-space: nowrap'>Betyg:</span>";
+				$contentString.="<p class='pgradient'>".$editgrade->getGrade()."</p>";
+				$contentString.= "<input type='hidden' name='$this->pickedid' value='". $editgrade->getID() ."'>";	
+			}
+
+			$contentString .= "<span class='spangradient' style='white-space: nowrap'>Nytt betyg:</span><br>";
+			$contentString.= "<select name='dropdownneweditgrade'>";
+
+			foreach($gradelist->toArray() as $grade)
+			{
 							 	
-							 	
-							 	
-							 }
-							 $contentString .= "<span id='spangradient' style='white-space: nowrap'>Nytt betyg:</span><br>";
-							 $contentString.= "<select name='dropdownneweditgrade'>";
-							 foreach($gradelist->toArray() as $grade)
-							 {
-							 	
-							 	$contentString.="<option value='". $grade->getGrade()."'>".$grade->getGrade()."</option>";
+				$contentString.="<option value='". $grade->getGrade()."'>".$grade->getGrade()."</option>";
 							 	 
-							 }
-							 $contentString.="</select>";
+			}
 
-							 $contentString.= "<input type='submit' name='$this->editgradebutton'  value='Editera Betyg'>";
-							 $contentString .= "</fieldset>";
-							 $contentString .= "</form>";
+			$contentString.="</select>";
+			$contentString.= "<input type='submit' name='$this->editgradebutton'  value='Editera Betyg'>";
+			$contentString .= "</fieldset>";
+			$contentString .= "</form>";
 
-					$HTMLbody = "<div id='divchoseneditrating'>
-				<h1>Editera betyg till vald spelning med band</h1>
-				<p><a href='?editrating'>Tillbaka</a></p>
-				$contentString
-				</div>";
+			$HTMLbody = "<div class='divchoseneditrating'>
+			<h1>Editera betyg till vald spelning med band</h1>
+			<p><a href='?editrating'>Tillbaka</a></p>
+			$contentString
+			</div>";
 
-				$this->echoHTML($HTMLbody);
+			$this->echoHTML($HTMLbody);
 		}
 
+		//Lägger in, inparameterns sträng i privata variabeln message som sedan skickas till formulären.
 		public function showMessage($message)
 		{
 			$this->message = "<p>" . $message . "</p>";
 		}
 
+		//Lägger in lyckat editera betyg meddelande i funktionen showMessage.
 		public function successfulEditGradeToEventWithBand()
 		{
 				$this->showMessage("Betyget har editerats!");

@@ -1,11 +1,12 @@
 <?php
 
 	require_once("common/HTMLView.php");
-	require_once("TimeDate.php");
+	
 
+	//Ärver HTMLView.
 	class AddBandEventView extends HTMLView{
 
-		private $timedate;
+		
 		private $message = "";
 
 		private $createevent = "createevent";
@@ -16,12 +17,14 @@
 		private $dropdownpickevent = "dropdownpickevent";
 		private $dropdownpickband = "dropdownpickband";
 
+		
 		public function __construct(){
 
-			$this->timedate = new TimeDate();
+			
 				
 		}
 
+		//Om satt så returnera livespelningsnamnet annars returnera falskt.
 		public function getEventName(){
 
 			if(isset($_POST[$this->createevent]))
@@ -31,6 +34,7 @@
 			return false;
 		}
 
+		//Om satt så returnera bandnamnet annars returnera falskt.
 		public function getBandName(){
 
 			if(isset($_POST[$this->createband]))
@@ -40,7 +44,7 @@
 			return false;
 		}
 
-		//Kontrollerar om användaren tryckt på lägga till livespelning knappen.
+		//Kontrollerar om användaren tryckt på lägga till livespelning knappen, returnera sant annars falskt.
 		public function didUserPressAddEventButton(){
 
 			if(isset($_POST[$this->createeventbutton]))
@@ -51,8 +55,7 @@
 
 		}
 
-		
-
+		//Kontrollerar om användaren tryckt på lägga till band till livespelning, returnera sant annars falskt.
 		public function didUserPressAddBandToEventButton()
 		{
 				if(isset($_POST[$this->createbandeventbutton]))
@@ -63,7 +66,7 @@
 
 		}
 
-		//Kontrollerar om användaren tryckt på lägga till band knappen.
+		//Kontrollerar om användaren tryckt på lägga till band knappen,returnera sant annars falskt. 
 		public function didUserPressAddBandButton()
 		{
 
@@ -75,6 +78,7 @@
 
 		}
 
+		//Om satt så returnera valt livespelningsdropdown värde, annars falskt.
 		public function pickedEventDropdownValue(){
 
 			if(isset($_POST[$this->dropdownpickevent]))
@@ -84,6 +88,7 @@
 			return false;
 		}
 
+		//Om satt så returnera valt banddropdown värde, annars falskt.
 		public function pickedBandDropdownValue(){
 
 			if(isset($_POST[$this->dropdownpickband]))
@@ -94,20 +99,15 @@
 
 		}
 
-
+		//Visar lägga till livespelnings forumläret.
 		public function ShowAddEventPage(){
 
-			$timedate = $this->timedate->TimeAndDate();
-			
-			
-
-
-			// visa Lägga till event sidan.
+					
 				
 					$contentString = 
 					 "
 					<form method=post >
-						<fieldset id='fieldaddevent'>
+						<fieldset class='fieldaddevent'>
 							<legend>Lägga till ny livespelning - Skriv in ny livespelning</legend>
 							$this->message
 							<span style='white-space: nowrap'>Livespelning:</span> <input type='text' name='$this->createevent'><br>
@@ -115,29 +115,24 @@
 						</fieldset>
 					</form>";
 
-					$HTMLbody = "<div id='divaddevent'>
-				<h1>Skapa nytt band</h1>
-				<p><a href='?login'>Tillbaka</a></p>
-				$contentString<br>
-				" . $timedate . ".</div>";
+					$HTMLbody = "<div class='divaddevent'>
+					<h1>Skapa nytt band</h1>
+					<p><a href='?login'>Tillbaka</a></p>
+					$contentString<br>
+					</div>";
 
-				$this->echoHTML($HTMLbody);
+					$this->echoHTML($HTMLbody);
 			}
 
-
+			//Visar lägga till band formuläret.
 			public function ShowAddBandPage(){
 
-			
-			
-			$timedate = $this->timedate->TimeAndDate();
-
-
-			// visa Lägga till band sidan.
+					
 				
 					$contentString = 
 					 "
 					<form method=post >
-						<fieldset id='fieldaddband'>
+						<fieldset class='fieldaddband'>
 							<legend>Lägga till nytt band - Skriv in band</legend>
 							$this->message
 							<span style='white-space: nowrap'>Band:</span><input type='text' name='$this->createband'><br>
@@ -145,32 +140,28 @@
 						</fieldset>
 					</form>";
 
-					$HTMLbody = "<div id='divaddband'>
-				<h1>Skapa nytt Band</h1>
-				<p><a href='?login'>Tillbaka</a></p>
-				$contentString<br>
-				" . $timedate . ".</div>";
+					$HTMLbody = "<div class='divaddband'>
+					<h1>Skapa nytt Band</h1>
+					<p><a href='?login'>Tillbaka</a></p>
+					$contentString<br>
+					</div>";
 
-				$this->echoHTML($HTMLbody);
-
-
+					$this->echoHTML($HTMLbody);
 
 			}
 
 
 
-
+			//Visar lägga till band till livespelning formuläret.
 			public function ShowAddBandToEventPage(EventList $eventlist, BandList $bandlist){
 
 			
-			$timedate = $this->timedate->TimeAndDate();
-
-			// visa Lägga till event och band sidan.
+					
 				
 					$contentString = 
 					 "
 					<form method=post >
-						<fieldset id='fieldaddbandevent'>
+						<fieldset class='fieldaddbandevent'>
 							<legend>Lägga till nytt band till spelning</legend>
 							$this->message
 							<span style='white-space: nowrap'>Livespelning:</span><br>
@@ -194,31 +185,34 @@
 						</fieldset>
 					</form>";
 
-					$HTMLbody = "<div id='divaddbandevent'>
-				<h1>Lägg till band till vald spelning</h1>
-				<p><a href='?login'>Tillbaka</a></p>
-				$contentString<br>
-				" . $timedate . ".</div>";
+					$HTMLbody = "<div class='divaddbandevent'>
+					<h1>Lägg till band till vald spelning</h1>
+					<p><a href='?login'>Tillbaka</a></p>
+					$contentString<br>
+					</div>";
 
-				$this->echoHTML($HTMLbody);
+					$this->echoHTML($HTMLbody);
 			}
 
+			//Lägger in, inparameterns sträng i privata variabeln message som sedan skickas till formulären.
 			public function showMessage($message)
 			{
 				$this->message = "<p>" . $message . "</p>";
 			}
 
-				// Visar Lägga till event-meddelande.
+			//Lägger in lyckat lägga till livespelningsmeddelande i funktionen showMessage.
 			public function successfulAddEvent()
 			{
 				$this->showMessage("Livespelningen lades till!");
 			}
 
+			//Lägger in lyckat lägga till bandmeddelande i funktionen showMessage.
 			public function successfulAddBand()
 			{
 				$this->showMessage("Bandet lades till!");
 			}
 
+			//Lägger in lyckat lägga till band till livespelning meddelande i funktionen showMessage.
 			public function successfulAddBandToEvent()
 			{
 				$this->showMessage("Bandet har lagt tills i livespelningen");

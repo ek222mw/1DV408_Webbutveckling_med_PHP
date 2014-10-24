@@ -364,7 +364,7 @@
 				
 				if ($result[self::$colevent] == null) {
 
-					throw new Exception("Event existerar ej i kolumnen");
+					throw new Exception("Livespelningen existerar ej i kolumnen");
 
 				}else{
 
@@ -451,7 +451,7 @@
 
 				$db = $this -> connection();
 				$this->dbTable = self::$tblEventBand;
-				$sql = "SELECT * FROM `$this->dbTable`";
+				$sql = "SELECT * FROM `$this->dbTable` GROUP BY ". self::$event ."";
 				
 
 				$query = $db -> prepare($sql);
@@ -499,7 +499,7 @@
 		{
 				$db = $this -> connection();
 				$this->dbTable = self::$tblEventBand;
-				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$event ." = ?";
+				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$event ." = ? ";
 				$params = array($eventdropdown);
 				
 
@@ -522,7 +522,7 @@
 		{
 				$db = $this -> connection();
 				$this->dbTable = self::$tblEventBand;
-				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$event ." = ?";
+				$sql = "SELECT * FROM `$this->dbTable` WHERE ". self::$event ." = ? GROUP BY ". self::$event ." ";
 				$params = array($eventdropdown);
 				
 

@@ -1,8 +1,9 @@
 <?php
 
 	require_once("common/HTMLView.php");
-	require_once("TimeDate.php");
+	
 
+	//Ã„rver HTMLView
 	class LoginView extends HTMLView
 	{
 		private $model;
@@ -11,7 +12,6 @@
 		private $password = "password";
 		private $checkbox = "checkbox";
 		private $message = "";
-		private $timedate;
 		private $welcomemessage = "";
 
 		private $logout = "logout";
@@ -29,24 +29,26 @@
 		private $addband = "addband";
 		private $deleterating = "deleterating";
 		
+		//GÃ¶r nya instanser av klasser.
 		public function __construct(LoginModel $model)
 		{
 			$this->model = $model;
-			$this->timedate = new TimeDate();
+			
 		}
 		
-		// Kontrollerar ifall användarnamnet är lagrat i POST-arrayen.
+		// Kontrollerar ifall anvÃ¤ndarnamnet Ã¤r lagrat i POST-arrayen.Tilldelad kod.
 		public function didUserPressLogin()
 		{
 			return isset($_POST[$this->username]);
 		}
 		
-		// Kontrollerar ifall URL:en innehåller logout.
+		// Kontrollerar ifall URL:en innehÃ¥ller logout.Tilldelad kod.
 		public function didUserPressLogout()
 		{
 			return isset($_GET[$this->logout]);
 		}
 
+		//Kollar om anvÃ¤ndaren tryckt pÃ¥ register lÃ¤nken, returnerar sant annars falskt.
 		public function didUserPressRegister()
 		{
 			 
@@ -54,24 +56,27 @@
 			
 		}
 
+		//Kollar om anvÃ¤ndaren tryckt pÃ¥ lÃ¤gga till livespelning lÃ¤nken i menyn, returnerar sant annars falskt.
 		public function didUserPressAddEvent()
 		{
 
 			return isset($_GET[$this->addevent]);
 		}
 
+		//Kollar om anvÃ¤ndaren tryckt pÃ¥ visar livespelningar med band samt betyg lÃ¤nken i menyn, returnerar sant annars falskt.
 		public function didUserPressShowAllEvents()
 		{
 			return isset($_GET[$this->showevents]);
 		}
 
+		//Kollar om anvÃ¤ndaren tryckt pÃ¥ editera betyg till livespelning med angivet band lÃ¤nken i menyn, returnerar sant annars falskt.
 		public function didUserPressEditGrades()
 		{
 			return isset($_GET[$this->editrating]);
 		}
 
 
-
+		//Kontrollerar om anvÃ¤ndaren tryckt pÃ¥ skapa anvÃ¤ndare knappen, returnera true annars falskt.
 		public function didUserPressCreateUser(){
 
 			if(isset($_POST[$this->createuserbutton]))
@@ -81,7 +86,7 @@
 			return false;
 		}
 
-
+		//Kollar om anvÃ¤ndaren matat in nÃ¥got i registrera anvÃ¤ndare inputen, returnera vÃ¤rdet annars falskt.
 		public function getRegisterUsername(){
 
 			if(isset($_POST[$this->createusername]))
@@ -91,6 +96,7 @@
 			return false;
 		}
 
+		//Kollar om anvÃ¤ndaren matat in nÃ¥got i registrera lÃ¶senord inputen, returnera vÃ¤rdet annars falskt.
 		public function getRegisterPassword(){
 
 			if(isset($_POST[$this->createpassword]))
@@ -100,6 +106,7 @@
 			return false;
 		}
 
+		//Kollar om anvÃ¤ndaren matat in nÃ¥got i repitera registrera lÃ¶senord inputen, returnera vÃ¤rdet annars falskt.
 		public function getRepeatRegisterPassword(){
 
 			if(isset($_POST[$this->repeatpassword]))
@@ -109,6 +116,7 @@
 			return false;
 		}
 
+		//Kollar om anvÃ¤ndaren matat in nÃ¥got i lÃ¶senord inputen, returnera vÃ¤rdet annars falskt.
 		public function getInputPassword()
 		{
 			if(isset($_POST[$this->password]))
@@ -118,23 +126,25 @@
 			return false;
 		}
 
+		//Kollar om anvÃ¤ndaren tryckt pÃ¥ lÃ¤gga till betyg till livespelning med angivet band lÃ¤nken i menyn, returnerar sant annars falskt.
 		public function didUserPressAddRating()
 		{
-
 			return isset($_GET[$this->addrating]);
 		}
 
+		//Kollar om anvÃ¤ndaren tryckt pÃ¥ lÃ¤gga till band till livespelning lÃ¤nken i menyn, returnerar sant annars falskt.
 		public function didUserPressAddBandToEvent()
 		{
 			return isset($_GET[$this->addbandtoevent]);
 		}
 
+		//Kollar om anvÃ¤ndaren tryckt pÃ¥ lÃ¤gga till band lÃ¤nken i menyn, returnerar sant annars falskt.
 		public function didUserPressAddBand()
 		{
-
 			return isset($_GET[$this->addband]);
 		}
 
+		//Kollar om anvÃ¤ndaren tryckt pÃ¥ ta bort betyg till livespelning med angivet band lÃ¤nken i menyn, returnerar sant annars falskt.
 		public function didUserPressDeleteGrade()
 		{
 			return isset($_GET[$this->deleterating]);
@@ -142,40 +152,38 @@
 
 		
 		
-		// Sätter body-innehållet.
+		// Visar logga in sidan.
 		public function showLoginPage()
 		{
 			
-			$timedate = $this->timedate->TimeAndDate();
+			
 
-			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
+			// Kontrollerar inloggningsstatus. Ã„r anvÃ¤ndaren inloggad...Tilldelad kod.	
 			if($this->model->checkLoginStatus())
 			{				
-				// ...visa användarsidan...
-				$contentString = "
-					$this->message
-					<p><a href='?logout'>Logga ut</a></p>";
-				$this->loginStatus = $this->model->getLoggedInUser() . " är inloggad";
+				// ...visa anvÃ¤ndarsidan...Tilldelad kod.
+				$contentString = "$this->message<p><a href='?logout'>Logga ut</a></p>";
+				$this->loginStatus = $this->model->getLoggedInUser() . " Ã¤r inloggad";
 			}
 			else 
 			{
 				
 				
-					// ...annars visas inloggningssidan.
-					$this->welcomemessage = "<h1 id='h1welcome'>Välkommen till Music-Live Review</h1>
-					<h2 id='h2welcome'>Logga in för att se menyn. Utan konto? Registrera dig och logga in.</h2>
-					<div id='divwelcome'>Musik Live Review handlar om att sätta betyg på livespelningar med band, det är ett lätt sätt att se på vilken livespelning som ett band presterar bäst.
-					När du loggat in kan du lägga till livespelningar,band och koppla band till livespelningar. Du kan även Lägga till, editera och ta bort betyg på livespelningar med band.</div>";
-					$this->loginStatus = "Ej inloggad";
+					
+				$this->welcomemessage = "<h1 class='h1welcome'>VÃ¤lkommen till Music-Live Review</h1>
+				<h2 class='h2welcome'>Logga in fÃ¶r att se menyn. Utan konto? Registrera dig och logga in.</h2>
+				<div class='divwelcome'>Musik Live Review handlar om att sÃ¤tta betyg pÃ¥ livespelningar med band, det Ã¤r ett lÃ¤tt sÃ¤tt att se pÃ¥ vilken livespelning som ett band presterar bÃ¤st.
+				NÃ¤r du loggat in kan du lÃ¤gga till livespelningar,band och koppla band till livespelningar. Du kan Ã¤ven LÃ¤gga till, editera och ta bort betyg pÃ¥ livespelningar med band.</div>";
+				$this->loginStatus = "Ej inloggad";
 
-					$contentString = 
+				$contentString = 
 					"<form id='loginForm' method=post action='?login'>
 						<fieldset>
-							<legend id='legendgradient'>Login - Skriv in användarnamn och lösenord</legend>
+							<legend class='legendgradient'>Login - Skriv in anvÃ¤ndarnamn och lÃ¶senord</legend>
 							$this->message
-							<span id='spangradient' style='white-space: nowrap'>Namn:</span> <input type='text' name='$this->username' value='" . $this->getInputUsername() . "'>
-							<span id='spangradient' style='white-space: nowrap'>Lösenord:</span> <input type='password' name='$this->password'><br> 
-							<span id='spangradient' style='white-space: nowrap'>Håll mig inloggad:</span><input type='checkbox' name='$this->checkbox' value='checked'><br><br>
+							<span class='spangradient' style='white-space: nowrap'>Namn:</span> <input type='text' name='$this->username' value='" . $this->getInputUsername() . "'>
+							<span class='spangradient' style='white-space: nowrap'>LÃ¶senord:</span> <input type='password' name='$this->password'><br> 
+							<span class='spangradient' style='white-space: nowrap'>HÃ¥ll mig inloggad:</span><input type='checkbox' name='$this->checkbox' value='checked'><br><br>
 							<button type='submit' name='button' form='loginForm' value='Submit'>Logga in</button>
 						</fieldset>
 					</form>";
@@ -184,138 +192,140 @@
 			
 			
 			$HTMLbody = "
-				<div id='divlogin'>
-				$this->welcomemessage
-				<div id='form'>
-				<div id='loginstatus'>$this->loginStatus</div>
-				<p><a href='?register'>Registrera ny användare</a></p>
-				$contentString
-				" . $timedate . ".</div></div>";
+			<div class='divlogin'>
+			$this->welcomemessage
+			<div class='form'>
+			<div class='loginstatus'>$this->loginStatus</div>
+			<p><a href='?register'>Registrera ny anvÃ¤ndare</a></p>
+			$contentString
+			</div></div>";
+
 			if($this->model->checkLoginStatus())
 			{
-			$HTMLbody = "<div id='divmenu'>
+				$HTMLbody = "<div class='divmenu'>
 				<h2>$this->loginStatus</h2>
 				$contentString<br>
 				<h2>Meny</h2>
-				<p><a href='?addevent'>Lägg till livespelning</a></p>
-				<p><a href='?addband'>Lägg till band</a></p>
-				<p><a href='?addbandtoevent'>Lägg till band till livespelning</a></p>
-				<p><a href='?addrating'>Lägg till betyg till livespelning med angivet band</a></p>
+				<p><a href='?addevent'>LÃ¤gg till livespelning</a></p>
+				<p><a href='?addband'>LÃ¤gg till band</a></p>
+				<p><a href='?addbandtoevent'>LÃ¤gg till band till livespelning</a></p>
+				<p><a href='?addrating'>LÃ¤gg till betyg till livespelning med angivet band</a></p>
 				<p><a href='?editrating'>Editera betyg till livespelning med angivet band</a></p>
 				<p><a href='?deleterating'>Ta bort betyg till livespelning med angivet band</a></p>
 				<p><a href='?showevents'>Visa livespelningar med band samt betyg</a></p>
-				
-				" . $timedate . ".</div>";
+				</div>";
 			}
 
 			$this->echoHTML($HTMLbody);
 		}
 
-
+		// Visar login formulÃ¤r med just registrerad anvÃ¤ndares uppgifter i anvÃ¤ndarnamn inputen.
 		public function showLoginPageWithRegname()
 		{
 			
-			$timedate = $this->timedate->TimeAndDate();
 			
-			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
+			
+			// Kontrollerar inloggningsstatus. Ã„r anvÃ¤ndaren inloggad...Tilldelad kod.	
 			if($this->model->checkLoginStatus())
 			{				
-				// ...visa användarsidan...
+				// ...visa anvÃ¤ndarsidan...Tilldelad kod.
 				$contentString = "
 					$this->message
 					<p><a href='?logout'>Logga ut</a></p>";
-				$this->loginStatus = $this->model->getLoggedInUser() . " är inloggad";
+				$this->loginStatus = $this->model->getLoggedInUser() . " Ã¤r inloggad";
 			}
 			else 
 			{
-					$this->welcomemessage = "<h1 id='h1welcome'>Välkommen till Music-Live Review</h1>
-					<h2 id='h2welcome'>Logga in för att se menyn. Utan konto? Registrera dig och logga in.</h2>
-					<div id='divwelcome'>Musik Live Review handlar om att sätta betyg på livespelningar med band, det är ett lätt att se på vilken livespelning som ett band presterar bäst.
-					När du loggat in kan du lägga till livespelningar,band och koppla band till livespelningar. Du kan även Lägga till, editera och ta bort betyg pålivespelningar med band.</div>";
+					$this->welcomemessage = "<h1 class='h1welcome'>VÃ¤lkommen till Music-Live Review</h1>
+					<h2 class='h2welcome'>Logga in fÃ¶r att se menyn. Utan konto? Registrera dig och logga in.</h2>
+					<div class='divwelcome'>Musik Live Review handlar om att sÃ¤tta betyg pÃ¥ livespelningar med band, det Ã¤r ett lÃ¤tt att se pÃ¥ vilken livespelning som ett band presterar bÃ¤st.
+					NÃ¤r du loggat in kan du lÃ¤gga till livespelningar,band och koppla band till livespelningar. Du kan Ã¤ven LÃ¤gga till, editera och ta bort betyg pÃ¥livespelningar med band.</div>";
 				
 					// ...annars visas inloggningssidan.
 					$this->loginStatus = "Ej inloggad";
 					$contentString = 
 					"<form id='loginForm' method=post action='?login'>
 						<fieldset>
-							<legend id='legendgradient'>Login - Skriv in användarnamn och lösenord</legend>
+							<legend class='legendgradient'>Login - Skriv in anvÃ¤ndarnamn och lÃ¶senord</legend>
 							$this->message
-							<span id='spangradient' style='white-space: nowrap'>Namn:</span> <input type='text' name='$this->username' value='" . $this->getRegisterUsername() . "'>
-							<span id='spangradient' style='white-space: nowrap'>Lösenord:</span> <input type='password' name='$this->password'> 
-							<input type='checkbox' name='$this->checkbox' value='checked'>Håll mig inloggad:
+							<span class='spangradient' style='white-space: nowrap'>Namn:</span> <input type='text' name='$this->username' value='" . $this->getRegisterUsername() . "'>
+							<span class='spangradient' style='white-space: nowrap'>LÃ¶senord:</span> <input type='password' name='$this->password'> 
+							<input type='checkbox' name='$this->checkbox' value='checked'>HÃ¥ll mig inloggad:
 							<button type='submit' name='button' form='loginForm' value='Submit'>Logga in</button>
 						</fieldset>
 					</form>";
 				
 			}
 			
-			$HTMLbody = "<div id='divlogin'>
-				$this->welcomemessage
-				<div id='form'>
-				<div id='loginstatus'>$this->loginStatus</div>
-				<p><a href='?register'>Registrera ny användare</a></p>
-				$contentString
-				" . $timedate . ".</div></div>";
+			$HTMLbody = "<div class='divlogin'>
+			$this->welcomemessage
+			<div class='form'>
+			<div class='loginstatus'>$this->loginStatus</div>
+			<p><a href='?register'>Registrera ny anvÃ¤ndare</a></p>
+			$contentString
+			</div></div>";
 			
 			$this->echoHTML($HTMLbody);
 		}
 
 		public function showRegisterPage(){
 
-			$timedate = $this->timedate->TimeAndDate();
 			
-			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
+			
+			// Kontrollerar inloggningsstatus. Ã„r anvÃ¤ndaren inloggad...Tilldelad kod.	
 			if($this->model->checkLoginStatus())
 			{			
 				
-				// ...visa användarsidan...
+				// ...visa anvÃ¤ndarsidan...Tilldelad kod.
 				$contentString = "
-					$this->message
-					<p><a href='?logout'>Logga ut</a></p>";
-				$this->loginStatus = $this->model->getLoggedInUser() . " är inloggad";
+				$this->message
+				<p><a href='?logout'>Logga ut</a></p>";
+				$this->loginStatus = $this->model->getLoggedInUser() . " Ã¤r inloggad";
+
 			}else{
 
 					// visa registreringssidan.
-					$this->loginStatus = "Ej inloggad, Registrerar användare";
+					$this->loginStatus = "Ej inloggad, Registrerar anvÃ¤ndare";
 					$contentString = 
 					 "
 					<form method=post >
-						<fieldset id='fieldregister'>
-							<legend>Registrera ny användare - Skriv in användarnamn och lösenord</legend>
+						<fieldset class='fieldregister'>
+							<legend>Registrera ny anvÃ¤ndare - Skriv in anvÃ¤ndarnamn och lÃ¶senord</legend>
 							$this->message
 							<span style='white-space: nowrap'>Namn:</span><br> <input type='text' name='$this->createusername' value='". strip_tags($_POST[$this->createusername]) ."'><br>
-							<span style='white-space: nowrap'>Lösenord:</span><br> <input type='password' name='$this->createpassword'><br>
-							<span style='white-space: nowrap'>Repetera Lösenord:</span><br> <input type='password' name='$this->repeatpassword'><br>
+							<span style='white-space: nowrap'>LÃ¶senord:</span><br> <input type='password' name='$this->createpassword'><br>
+							<span style='white-space: nowrap'>Repetera LÃ¶senord:</span><br> <input type='password' name='$this->repeatpassword'><br>
 							<span style='white-space: nowrap'>Skicka:</span> <input type='submit' name='$this->createuserbutton'  value='Registrera'>
 						</fieldset>
 					</form>";
 
-					$HTMLbody = "<div id='divregister'>
-				<p><a href='?login'>Tillbaka</a></p>
-				<h2>$this->loginStatus</h2>
-				$contentString<br>
-				" . $timedate . ".</div>";
+					$HTMLbody = "<div class='divregister'>
+					<p><a href='?login'>Tillbaka</a></p>
+					<h2>$this->loginStatus</h2>
+					$contentString<br>
+					</div>";
 
-				$this->echoHTML($HTMLbody);
+					$this->echoHTML($HTMLbody);
 			}
 
 				
 		}
 		
-		// Skapar cookies innehållande de medskickande värdena.
+		// Skapar cookies innehÃ¥llande de medskickande vÃ¤rdena.Tilldelad kod.
 		public function createCookies($usernameToSave, $passwordToSave)
 		{
-			// Bestämmer cookies livslängd.
+			// BestÃ¤mmer cookies livslÃ¤ngd.
 			$cookieExpirationTime = time()+ 60;
 			
-			// Skapar cookies.
+			// Skapar cookies.Tilldelad kod.
 			setcookie("Username", $usernameToSave, $cookieExpirationTime);
 			setcookie("Password", $passwordToSave, $cookieExpirationTime);
 			
-			//Skapar en fil innehållande information om kakornas livslängd.
+			//Skapar en fil innehÃ¥llande information om kakornas livslÃ¤ngd.Tilldelad kod.
 			$this->model->createReferenceFile($cookieExpirationTime, "cookieExpirationTime");
 		}
 		
+		//SÃ¶ker efter kakor.
 		public function searchForCookies()
 		{
 			if(isset($_COOKIE["Username"]) === true && isset($_COOKIE["Password"]) === true)
@@ -326,20 +336,20 @@
 			return false;
 		}
 		
-		// Logga in med kakor.
+		// Logga in med kakor.Tilldelad kod.
 		public function loginWithCookies()
 		{
 			// Validera cookies mot textfilen.
 			$this->model->validateExpirationTime();
 			
-			// Validera kakornas innehåll.
+			// Validera kakornas innehÃ¥ll.
 			$this->model->verifyUserInput($_COOKIE["Username"],$_COOKIE["Password"], true);
 			
-			// Visa rättmeddelande.
+			// Visa rÃ¤ttmeddelande.
 			$this->showMessage("Inloggningen lyckades via cookies");
 		}
 		
-		// Tar bort alla cookies.
+		// Tar bort alla cookies.Tilldelad kod.
 		public function removeCookies()
 		{
 			foreach ($_COOKIE as $c_key => $c_value)
@@ -348,7 +358,7 @@
 			}
 		}
 		
-		// Sparar angivet användarnamn i textfältet.
+		// Sparar angivet anvÃ¤ndarnamn i textfÃ¤ltet.Tilldelad kod.
 		public function getInputUsername()
 		{
 			if(isset($_POST[$this->username]))
@@ -356,37 +366,38 @@
 				return $_POST[$this->username];
 			}
 			
-			// Är inte användarnamnet satt skickas en tomsträng med.
+			// Ã„r inte anvÃ¤ndarnamnet satt skickas en tomstrÃ¤ng med.Tilldelad kod.
 			return "";
 		}
 		
-		// Visar eventuella meddelanden.
+		// Visar eventuella meddelanden.Tilldelad kod.
 		public function showMessage($message)
 		{
 			$this->message = "<p>" . $message . "</p>";
 		}
 		
-		// Visar login-meddelande.
+		// Visar login-meddelande.Tilldelad kod.
 		public function successfulLogin()
 		{
 			$this->showMessage("Inloggningen lyckades!");
 		}
 		
-		// Visar login-meddelande för "Håll mig inloggad"-funktionen.
+		// Visar login-meddelande fÃ¶r "HÃ¥ll mig inloggad"-funktionen.Tilldelad kod.
 		public function successfulLoginAndCookieCreation()
 		{
-			$this->showMessage("Inloggningen lyckades och vi kommer ihåg dig nästa gång");
+			$this->showMessage("Inloggningen lyckades och vi kommer ihÃ¥g dig nÃ¤sta gÃ¥ng");
 		}
 		
-		// Visar logout-meddelande.
+		// Visar logout-meddelande.Tilldelad kod.
 		public function successfulLogout()
 		{
 			$this->showMessage("Du har nu loggat ut");
 		}
 
+		//LÃ¤gger in lyckat lÃ¤gga till anvÃ¤ndare meddelande i funktionen showMessage.
 		public function successfulRegistration()
 		{
-			$this->showMessage("Registrering av ny användare lyckades");
+			$this->showMessage("Registrering av ny anvÃ¤ndare lyckades");
 		}
 
 

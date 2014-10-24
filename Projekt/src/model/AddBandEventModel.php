@@ -12,7 +12,7 @@
 		}
 
 
-		//Kontrollerar längden på det inmatade livespelningsvärdet.	
+		//Kontrollerar längden på det inmatade livespelningsvärdet. om giltigt returnera sant annars kasta undantag.	
 		public function CheckEventLength($event){
 
 			if(mb_strlen($event) < 1 || mb_strlen($event) > 50 ){
@@ -24,7 +24,7 @@
 			return true;
 
 		}
-		//Kontrollerar längden på det inmatade bandvärdet.
+		//Kontrollerar längden på det inmatade bandvärdet. Om giltigt returnera sant annars kasta undantag.
 		public function CheckBandLength($band){
 
 			if(mb_strlen($band) < 1 || mb_strlen($band) > 50 ){
